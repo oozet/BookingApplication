@@ -3,7 +3,7 @@ name: Feature
 about: Describe a feature for this project
 title: "[Feature]"
 labels: ''
-assignees: DefinitelyUnlikely
+assignees: ''
 
 ---
 
