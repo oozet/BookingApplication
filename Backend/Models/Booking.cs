@@ -1,6 +1,6 @@
 namespace BookingApplication.Models;
 
-public class BookingEntity
+public class Booking
 {
 
 }

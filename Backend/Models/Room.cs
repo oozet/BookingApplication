@@ -1,6 +1,6 @@
 namespace BookingApplication.Models;
 
-public class RoomEntity
+public class Room
 {
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;
@@ -9,7 +9,7 @@ public class RoomEntity
     public int Area { get; set; }
     public double Price { get; set; }
 
-    public RoomEntity(string name, int roomNumber, int limit, int area, double price)
+    public Room(string name, int roomNumber, int limit, int area, double price)
     {
         Id = Guid.NewGuid().ToString();
         Name = name;
@@ -19,7 +19,7 @@ public class RoomEntity
         Price = price;
     }
 
-    private RoomEntity() { }
+    private Room() { }
 
 }
 
