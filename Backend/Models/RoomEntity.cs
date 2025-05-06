@@ -1,0 +1,2 @@
+namespace BookingApplication.Models;
+
