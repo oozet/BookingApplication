@@ -1,7 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
+using BookingApplication.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-var app = builder.Build();
+namespace BookingApplication;
 
-app.UseHttpsRedirection();
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-app.Run();
+        builder.Services.AddDbContext<BookingAppContext>(options => options.UseNpgsql(DbConfig.connectionString));
+
+        builder.Services.AddControllers();
+
+        var app = builder.Build();
+        app.MapControllers();
+        app.Run();
+    }
+}
