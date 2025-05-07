@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingApplication.Controllers;
 
 [ApiController]
-[Route("")]
+[Route("user")]
 public class UserController : ControllerBase
 {
     private readonly IUserService userService;
@@ -29,19 +29,14 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = new IdentityUser()
-            {
-                UserName = request.Username,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-            };
-            var result = await userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
-            {
-                // Return an array of possible errors from UserManager to be handled and displayed on frontend.
-                return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-            }
+            var user = await userService.RegisterAsync(request);
+            if (user == null)
+                return BadRequest("Invalid request");
             return Ok();
+        }
+        catch (IdentityException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch
         {

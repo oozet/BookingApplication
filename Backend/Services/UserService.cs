@@ -5,7 +5,7 @@ namespace BookingApplication.Services;
 
 public interface IUserService
 {
-    public Task<AppUser> RegisterAsync();
+    public Task<AppUser> RegisterAsync(RegisterRequest request);
     public Task<AppUser> LoginAsync();
     public Task DeleteAsync();
     public Task<AppUser> UpdateAsync();
@@ -46,9 +46,21 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<AppUser> RegisterAsync()
+    public async Task<AppUser> RegisterAsync(RegisterRequest request)
     {
-        throw new NotImplementedException();
+        var user = new AppUser()
+        {
+            UserName = request.Username,
+            Email = request.Email,
+            PhoneNumber = request.PhoneNumber,
+        };
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            var errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
+            throw new IdentityException($"Error while creating user: {errorMessages}");
+        }
+        return user;
     }
 
     public Task<AppUser> UpdateAsync()
@@ -56,3 +68,5 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 }
+
+public class IdentityException(string message) : Exception(message) { }
