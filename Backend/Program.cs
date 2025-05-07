@@ -20,11 +20,12 @@ public class Program
             .AddEntityFrameworkStores<BookingAppContext>()
             .AddDefaultTokenProviders();
 
-        builder.Services.AddScoped<IUserService, UserService>();
+        //builder.Services.AddScoped<IUserService, UserService>();
 
         builder.Services.AddControllers();
 
         var app = builder.Build();
+        //app.MapIdentityApi<Models.User>();
         app.MapControllers();
         app.Run();
     }

@@ -52,16 +52,20 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         if (user == null)
             return null;
 
-        await userManager.DeleteAsync(user);
-        return null;
+        var result = await userManager.DeleteAsync(user);
+        if (result.Succeeded)
+            return null;
+
+        throw new IdentityException($"Unable to delete {user.UserName}");
     }
 
     public async Task EditAsync(User entityToEdit)
     {
         var result = await userManager.UpdateAsync(entityToEdit);
-        if (!result.Succeeded)
-            throw new IdentityException($"Unable to update {entityToEdit.UserName}");
-        return;
+        if (result.Succeeded)
+            return;
+
+        throw new IdentityException($"Unable to update {entityToEdit.UserName}");
     }
 
     public async Task<User> EditFromRequestAsync(EditUserRequest request)
@@ -73,10 +77,10 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         updaterService.UpdateEntity(user, request);
 
         var result = await userManager.UpdateAsync(user);
-        if (!result.Succeeded)
-            throw new IdentityException($"Unable to update {user.UserName}");
+        if (result.Succeeded)
+            return user;
 
-        return user;
+        throw new IdentityException($"Unable to update {user.UserName}");
     }
 
     // Implement with pagination?

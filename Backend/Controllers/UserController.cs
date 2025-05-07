@@ -79,10 +79,10 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Update(EditUserRequest request)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
-        var user = await userService.GetByIdAsync(userId);
+        // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+        // var user = await userService.GetByIdAsync(userId);
 
-        userService.EditFromRequestAsync(request);
+        var updatedUser = await userService.EditFromRequestAsync(request);
 
         return Ok();
     }
