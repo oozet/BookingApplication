@@ -8,4 +8,6 @@ public class Room
     public required int Limit { get; set; }
     public required int Area { get; set; }
     public required double Price { get; set; }
+
+    public ICollection<Booking> Bookings { get; set; } = [];
 }
