@@ -20,8 +20,26 @@ CREATE TABLE "AspNetRoles" (
 );
 
 
+CREATE TABLE "Activities" (
+    "Id" uuid NOT NULL,
+    "Name" text NOT NULL,
+    "Description" text,
+    CONSTRAINT "PK_Activities" PRIMARY KEY ("Id")
+);
+
+
+CREATE TABLE "AspNetRoles" (
+    "Id" text NOT NULL,
+    "Name" character varying(256),
+    "NormalizedName" character varying(256),
+    "ConcurrencyStamp" text,
+    CONSTRAINT "PK_AspNetRoles" PRIMARY KEY ("Id")
+);
+
+
 CREATE TABLE "AspNetUsers" (
     "Id" text NOT NULL,
+    "Adress" text,
     "UserName" character varying(256),
     "NormalizedUserName" character varying(256),
     "Email" character varying(256),
