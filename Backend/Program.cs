@@ -1,4 +1,5 @@
 using BookingApplication.Data;
+using BookingApplication.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,12 @@ public class Program
             .Services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<BookingAppContext>()
             .AddDefaultTokenProviders();
+
+        builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+
+        builder.Services.AddIdentityCore<User>()
+         .AddEntityFrameworkStores<BookingAppContext>()
+         .AddApiEndpoints();
 
         builder.Services.AddControllers();
 
