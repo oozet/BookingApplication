@@ -64,7 +64,7 @@ public class UserController : ControllerBase
     // Option 1
     [HttpPut("{id}")]
     [Authorize]
-    public async Task<IActionResult> Update(string id, UpdateUserRequest request)
+    public async Task<IActionResult> Update(string id, EditUserRequest request)
     {
         var user = await userService.GetByIdAsync(id);
         if (user == null || user.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
@@ -77,10 +77,12 @@ public class UserController : ControllerBase
     // Option 2
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Update(UpdateUserRequest request)
+    public async Task<IActionResult> Update(EditUserRequest request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
         var user = await userService.GetByIdAsync(userId);
+
+        userService.EditFromRequestAsync(request);
 
         return Ok();
     }
@@ -101,13 +103,12 @@ public class RegisterUserRequest : IRequest
     public string? PhoneNumber { get; set; }
 }
 
-public class UpdateUserRequest : IRequest
+public class EditUserRequest : IRequest
 {
+    public required string Id { get; set; }
     public string? Username { get; set; }
     public string? Email { get; set; }
     public string? Password { get; set; }
     public string? Address { get; set; }
     public string? PhoneNumber { get; set; }
 }
-
-public class EditUserRequest : IRequest { }

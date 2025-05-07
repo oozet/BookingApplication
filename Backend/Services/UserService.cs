@@ -4,30 +4,35 @@ using BookingApplication.Interfaces;
 using BookingApplication.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Services;
 
-public interface IUserService : IService<User, RegisterUserRequest, SignInUserRequest>
+public interface IUserService : IService<User, RegisterUserRequest, EditUserRequest>
 {
     public Task<User> RegisterAsync(RegisterUserRequest request);
     public Task LoginAsync(SignInUserRequest request);
-    public Task DeleteAsync();
-    public Task<User> UpdateAsync();
 
     // id, username
     //public Task<Dictionary<string, string>> GetAllAsync();
-    public Task<User> GetByIdAsync(string id);
+    public Task<User?> GetByIdAsync(string id);
 }
 
 public class UserService : IUserService //: EfService<User, RegisterRequest, EditUserRequest>, IUserService
 {
     private readonly UserManager<User> userManager;
     private readonly SignInManager<User> signInManager;
+    private readonly EntityUpdaterService updaterService;
 
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager)
+    public UserService(
+        UserManager<User> userManager,
+        SignInManager<User> signInManager,
+        EntityUpdaterService updaterService
+    )
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
+        this.updaterService = updaterService;
     }
 
     public Task<User> CreateFromRequestAsync(RegisterUserRequest request)
@@ -35,44 +40,59 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync()
+    public async Task DeleteAsync(User entityToRemove)
     {
-        throw new NotImplementedException();
+        await userManager.DeleteAsync(entityToRemove);
+        return;
     }
 
-    public Task DeleteAsync(User entityToRemove)
+    public async Task<User?> DeleteAsync(Guid entityId)
     {
-        throw new NotImplementedException();
+        var user = await userManager.FindByIdAsync(entityId.ToString());
+        if (user == null)
+            return null;
+
+        await userManager.DeleteAsync(user);
+        return null;
     }
 
-    public Task<User?> DeleteAsync(Guid entityId)
+    public async Task EditAsync(User entityToEdit)
     {
-        throw new NotImplementedException();
+        var result = await userManager.UpdateAsync(entityToEdit);
+        if (!result.Succeeded)
+            throw new IdentityException($"Unable to update {entityToEdit.UserName}");
+        return;
     }
 
-    public Task EditAsync(User entityToEdit)
+    public async Task<User> EditFromRequestAsync(EditUserRequest request)
     {
-        throw new NotImplementedException();
+        var user =
+            await userManager.FindByIdAsync(request.Id)
+            ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
+
+        updaterService.UpdateEntity(user, request);
+
+        var result = await userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new IdentityException($"Unable to update {user.UserName}");
+
+        return user;
     }
 
-    public Task<User> EditFromRequestAsync(SignInUserRequest request)
+    // Implement with pagination?
+    public async Task<IEnumerable<User>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await userManager.Users.ToListAsync();
     }
 
-    public Task<IEnumerable<User>> GetAllAsync()
+    public async Task<User?> GetByIdAsync(string id)
     {
-        throw new NotImplementedException();
+        return await userManager.FindByIdAsync(id);
     }
 
-    public Task<User> GetByIdAsync(string id)
+    public async Task<User?> GetByIdAsync(Guid entityId)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<User> GetByIdAsync(Guid entityId)
-    {
-        throw new NotImplementedException();
+        return await userManager.FindByIdAsync(entityId.ToString());
     }
 
     public async Task LoginAsync(SignInUserRequest request)
@@ -96,11 +116,6 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         return;
     }
 
-    public Task LoginAsync(RegisterUserRequest request)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<User> RegisterAsync(RegisterUserRequest request)
     {
         var user = new User()
@@ -117,11 +132,35 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         }
         return user;
     }
-
-    public Task<User> UpdateAsync()
-    {
-        throw new NotImplementedException();
-    }
 }
 
 public class IdentityException(string message) : Exception(message) { }
+
+public interface IEntityUpdaterService
+{
+    void UpdateEntity<T>(T entity, object updateRequest)
+        where T : class;
+}
+
+public class EntityUpdaterService : IEntityUpdaterService
+{
+    public void UpdateEntity<T>(T entity, object updateRequest)
+        where T : class
+    {
+        var entityType = entity.GetType();
+        var requestType = updateRequest.GetType();
+
+        foreach (var prop in requestType.GetProperties())
+        {
+            var entityProp = entityType.GetProperty(prop.Name);
+            if (entityProp != null && entityProp.CanWrite)
+            {
+                var newValue = prop.GetValue(updateRequest);
+                if (newValue != null) // Only update non-null values
+                {
+                    entityProp.SetValue(entity, newValue);
+                }
+            }
+        }
+    }
+}
