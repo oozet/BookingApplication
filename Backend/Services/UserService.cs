@@ -6,7 +6,7 @@ namespace BookingApplication.Services;
 public interface IUserService
 {
     public Task<AppUser> RegisterAsync(RegisterRequest request);
-    public Task<AppUser> LoginAsync();
+    public Task LoginAsync(SignInRequest request);
     public Task DeleteAsync();
     public Task<AppUser> UpdateAsync();
 
@@ -41,9 +41,25 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<AppUser> LoginAsync()
+    public async Task LoginAsync(SignInRequest request)
     {
-        throw new NotImplementedException();
+        _ =
+            await userManager.FindByNameAsync(request.Username)
+            ?? throw new ArgumentNullException("User not found.");
+
+        var result = await signInManager.PasswordSignInAsync(
+            request.Username,
+            request.Password,
+            false,
+            false
+        );
+
+        if (!result.Succeeded)
+        {
+            throw new IdentityException($"Invalid username or password");
+        }
+
+        return;
     }
 
     public async Task<AppUser> RegisterAsync(RegisterRequest request)

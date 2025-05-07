@@ -45,27 +45,25 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> SignIn(SignInRequest request)
+    public async Task<IActionResult> Login(SignInRequest request)
     {
         try
         {
-            // Could use UserManager to give different error if the username doesn't exist in database.
+            await userService.LoginAsync(request);
 
-            var result = await signInManager.PasswordSignInAsync(
-                request.Username,
-                request.Password,
-                false,
-                false
-            );
-            if (!result.Succeeded)
-            {
-                // Logic for different results?
-            }
             return Ok();
+        }
+        catch (ArgumentNullException)
+        {
+            return BadRequest("User not found");
+        }
+        catch (IdentityException ex)
+        {
+            return Unauthorized(ex.Message);
         }
         catch
         {
-            return Unauthorized("Invalid credentials");
+            return StatusCode(500, new { errors = "An unexpected error occured." });
         }
     }
 }
