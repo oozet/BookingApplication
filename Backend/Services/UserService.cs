@@ -1,19 +1,21 @@
 using Backend_ind.Services;
+using BookingApplication.Controllers;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace BookingApplication.Services;
 
-public interface IUserService
+public interface IUserService : IService<User, RegisterUserRequest, SignInUserRequest>
 {
-    public Task<User> RegisterAsync(RegisterRequest request);
-    public Task LoginAsync(SignInRequest request);
+    public Task<User> RegisterAsync(RegisterUserRequest request);
+    public Task LoginAsync(SignInUserRequest request);
     public Task DeleteAsync();
     public Task<User> UpdateAsync();
 
     // id, username
-    public Task<Dictionary<string, string>> GetAllAsync();
+    //public Task<Dictionary<string, string>> GetAllAsync();
     public Task<User> GetByIdAsync(string id);
 }
 
@@ -28,12 +30,37 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         this.signInManager = signInManager;
     }
 
+    public Task<User> CreateFromRequestAsync(RegisterUserRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task DeleteAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Dictionary<string, string>> GetAllAsync()
+    public Task DeleteAsync(User entityToRemove)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<User?> DeleteAsync(Guid entityId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task EditAsync(User entityToEdit)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<User> EditFromRequestAsync(SignInUserRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<User>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
@@ -43,7 +70,12 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new NotImplementedException();
     }
 
-    public async Task LoginAsync(SignInRequest request)
+    public Task<User> GetByIdAsync(Guid entityId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task LoginAsync(SignInUserRequest request)
     {
         _ =
             await userManager.FindByNameAsync(request.Username)
@@ -64,7 +96,12 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         return;
     }
 
-    public async Task<User> RegisterAsync(RegisterRequest request)
+    public Task LoginAsync(RegisterUserRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<User> RegisterAsync(RegisterUserRequest request)
     {
         var user = new User()
         {

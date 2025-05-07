@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using BookingApplication.Models;
 using BookingApplication.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,22 +12,14 @@ namespace BookingApplication.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserService userService;
-    private readonly SignInManager<IdentityUser> signInManager;
-    private readonly UserManager<IdentityUser> userManager;
 
-    public UserController(
-        IUserService userService,
-        SignInManager<IdentityUser> signInManager,
-        UserManager<IdentityUser> userManager
-    )
+    public UserController(IUserService userService)
     {
         this.userService = userService;
-        this.signInManager = signInManager;
-        this.userManager = userManager;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
         try
         {
@@ -45,7 +39,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(SignInRequest request)
+    public async Task<IActionResult> Login([FromBody] SignInUserRequest request)
     {
         try
         {
@@ -66,3 +60,54 @@ public class UserController : ControllerBase
             return StatusCode(500, new { errors = "An unexpected error occured." });
         }
     }
+
+    // Option 1
+    [HttpPut("{id}")]
+    [Authorize]
+    public async Task<IActionResult> Update(string id, UpdateUserRequest request)
+    {
+        var user = await userService.GetByIdAsync(id);
+        if (user == null || user.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            return BadRequest("");
+        }
+        return Ok();
+    }
+
+    // Option 2
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> Update(UpdateUserRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+        var user = await userService.GetByIdAsync(userId);
+
+        return Ok();
+    }
+}
+
+public class SignInUserRequest : IRequest
+{
+    public required string Username { get; set; }
+    public required string Password { get; set; }
+}
+
+public class RegisterUserRequest : IRequest
+{
+    public required string Username { get; set; }
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+    public string? Address { get; set; }
+    public string? PhoneNumber { get; set; }
+}
+
+public class UpdateUserRequest : IRequest
+{
+    public string? Username { get; set; }
+    public string? Email { get; set; }
+    public string? Password { get; set; }
+    public string? Address { get; set; }
+    public string? PhoneNumber { get; set; }
+}
+
+public class EditUserRequest : IRequest { }
