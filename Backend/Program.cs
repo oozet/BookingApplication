@@ -11,7 +11,14 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddDbContext<BookingAppContext>(options => options.UseNpgsql(DbConfig.connectionString));
+        builder.Services.AddDbContext<BookingAppContext>(options =>
+            options.UseNpgsql(DbConfig.connectionString)
+        );
+
+        builder
+            .Services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<BookingAppContext>()
+            .AddDefaultTokenProviders();
 
         builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 
