@@ -1,4 +1,5 @@
 using BookingApplication.Models;
+using BookingApplication.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +9,17 @@ namespace BookingApplication.Controllers;
 [Route("")]
 public class UserController : ControllerBase
 {
+    private readonly IUserService userService;
     private readonly SignInManager<IdentityUser> signInManager;
     private readonly UserManager<IdentityUser> userManager;
 
     public UserController(
+        IUserService userService,
         SignInManager<IdentityUser> signInManager,
         UserManager<IdentityUser> userManager
     )
     {
+        this.userService = userService;
         this.signInManager = signInManager;
         this.userManager = userManager;
     }
@@ -25,7 +29,12 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = new IdentityUser() { UserName = request.Username, Email = request.Email };
+            var user = new IdentityUser()
+            {
+                UserName = request.Username,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+            };
             var result = await userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
@@ -64,19 +73,4 @@ public class UserController : ControllerBase
             return Unauthorized("Invalid credentials");
         }
     }
-}
-
-public class SignInRequest
-{
-    public required string Username { get; set; }
-    public required string Password { get; set; }
-}
-
-public class RegisterRequest
-{
-    public required string Username { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
-    public string? Address { get; set; }
-    public string? PhoneNumber { get; set; }
 }
