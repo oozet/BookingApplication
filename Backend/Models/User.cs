@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BookingApplication.Models;
 
-public class AppUser : IdentityUser
+public class User : IdentityUser
 {
     public ICollection<Booking> Bookings { get; set; } = [];
 }

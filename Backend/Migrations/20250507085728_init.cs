@@ -13,7 +13,7 @@ namespace BookingApplication.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Activity",
+                name: "Activities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -22,7 +22,7 @@ namespace BookingApplication.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activity", x => x.Id);
+                    table.PrimaryKey("PK_Activities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,7 +187,7 @@ namespace BookingApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Booking",
+                name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -200,20 +200,20 @@ namespace BookingApplication.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Booking", x => x.Id);
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Booking_Activity_ActivityId",
+                        name: "FK_Bookings_Activities_ActivityId",
                         column: x => x.ActivityId,
-                        principalTable: "Activity",
+                        principalTable: "Activities",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Booking_AspNetUsers_UserId",
+                        name: "FK_Bookings_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Booking_Rooms_RoomId",
+                        name: "FK_Bookings_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -258,18 +258,18 @@ namespace BookingApplication.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_ActivityId",
-                table: "Booking",
+                name: "IX_Bookings_ActivityId",
+                table: "Bookings",
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_RoomId",
-                table: "Booking",
+                name: "IX_Bookings_RoomId",
+                table: "Bookings",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_UserId",
-                table: "Booking",
+                name: "IX_Bookings_UserId",
+                table: "Bookings",
                 column: "UserId");
         }
 
@@ -292,13 +292,13 @@ namespace BookingApplication.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Booking");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Activity");
+                name: "Activities");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
