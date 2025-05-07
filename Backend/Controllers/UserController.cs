@@ -1,21 +1,25 @@
 using BookingApplication.Models;
+using BookingApplication.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApplication.Controllers;
 
 [ApiController]
-[Route("")]
+[Route("user")]
 public class UserController : ControllerBase
 {
+    private readonly IUserService userService;
     private readonly SignInManager<IdentityUser> signInManager;
     private readonly UserManager<IdentityUser> userManager;
 
     public UserController(
+        IUserService userService,
         SignInManager<IdentityUser> signInManager,
         UserManager<IdentityUser> userManager
     )
     {
+        this.userService = userService;
         this.signInManager = signInManager;
         this.userManager = userManager;
     }
@@ -25,14 +29,14 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = new IdentityUser() { UserName = request.Username, Email = request.Email };
-            var result = await userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
-            {
-                // Return an array of possible errors from UserManager to be handled and displayed on frontend.
-                return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-            }
+            var user = await userService.RegisterAsync(request);
+            if (user == null)
+                return BadRequest("Invalid request");
             return Ok();
+        }
+        catch (IdentityException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch
         {
@@ -41,47 +45,24 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> SignIn(SignInRequest request)
+    public async Task<IActionResult> Login(SignInRequest request)
     {
         try
         {
-            // Could use UserManager to give different error if the username doesn't exist in database.
+            await userService.LoginAsync(request);
 
-            var result = await signInManager.PasswordSignInAsync(
-                request.Username,
-                request.Password,
-                false,
-                false
-            );
-            if (!result.Succeeded)
-            {
-                // Logic for different results?
-            }
             return Ok();
+        }
+        catch (ArgumentNullException)
+        {
+            return BadRequest("User not found");
+        }
+        catch (IdentityException ex)
+        {
+            return Unauthorized(ex.Message);
         }
         catch
         {
-            return Unauthorized("Invalid credentials");
+            return StatusCode(500, new { errors = "An unexpected error occured." });
         }
     }
-}
-
-public class SignInRequest : IRequest
-{
-    public required string Username { get; set; }
-    public required string Password { get; set; }
-}
-
-public class RegisterRequest : IRequest
-{
-    public required string Username { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
-    public string? Address { get; set; }
-    public string? PhoneNumber { get; set; }
-}
-
-public class EditUserRequest : IRequest
-{
-    
-}
