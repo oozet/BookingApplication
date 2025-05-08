@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using BookingApplication.Interfaces;
 
-namespace Backend_ind.Services;
+namespace BookingApplication.Services;
 
 public abstract class EfService<T, TAddRequest, TEditRequest> : IService<T, TAddRequest, TEditRequest> 
     where T : class 
     where TAddRequest : IRequest 
     where TEditRequest : IRequest 
 {
-    private readonly IRepository<T> repository;
+    protected readonly IRepository<T> repository;
 
     public EfService(IRepository<T> repository)
     {

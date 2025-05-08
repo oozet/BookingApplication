@@ -36,9 +36,15 @@ public class EfRepository<T> : IRepository<T> where T : class
         return await context.Set<T>().ToListAsync();
     }
 
+
     public async Task EditAsync(T updatedEntity)
     {
         context.Set<T>().Update(updatedEntity);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task SaveChangesAsync()
+    {
         await context.SaveChangesAsync();
     }
 }
