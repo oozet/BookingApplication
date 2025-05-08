@@ -29,6 +29,7 @@ public class Program
         builder.Services.AddControllers();
 
         var app = builder.Build();
+        //app.MapIdentityApi<Models.User>();
         app.MapControllers();
         app.Run();
     }
