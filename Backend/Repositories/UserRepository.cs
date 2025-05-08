@@ -1,3 +1,6 @@
+using BookingApplication.Data;
+using BookingApplication.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity; 
 
@@ -57,3 +60,11 @@ public class UserRepository : IRepository<User>
             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower()); 
     }
 }
+
+// public class UserRepository : EfRepository<User> {
+
+//     public UserRepository(AppDbContext context) : base (context)
+//     {
+        
+//     }
+// }
