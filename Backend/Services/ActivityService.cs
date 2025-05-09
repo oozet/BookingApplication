@@ -1,19 +1,50 @@
-using Backend_ind.Services;
 using BookingApplication.Controllers;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
+
+namespace BookingApplication.Services;
 
 public class ActivityService : EfService<Activity, CreateActivityRequest, EditActivityRequest>
 {
     public ActivityService(IRepository<Activity> repository) : base(repository) {}
 
-    public override Task<Activity> CreateFromRequestAsync(CreateActivityRequest request)
+    public override async Task<Activity> CreateFromRequestAsync(CreateActivityRequest request)
     {
-        throw new NotImplementedException();
+        if(string.IsNullOrWhiteSpace(request.Name))
+        {
+            throw new Exception("Activity must have a name");
+        }
+
+        var activity = new Activity
+        {
+            Id = new Guid(), // ?
+            Name = request.Name,
+            Description = request.Description,
+        };
+
+        await repository.CreateAsync(activity);
+        return activity;
     }
 
-    public override Task<Activity> EditFromRequestAsync(EditActivityRequest request)
+    public override async Task<Activity> EditFromRequestAsync(EditActivityRequest request)
     {
-        throw new NotImplementedException();
+        if(request.Id == Guid.Empty)
+        {
+            throw new Exception("The activity ID can't be empty");
+        }
+        if(string.IsNullOrWhiteSpace(request.Name))
+        {
+            throw new Exception("Activity must have a name");
+        }
+
+        var activity = new Activity 
+        {
+            Id = request.Id,
+            Name = request.Name,
+            Description = request.Description,
+        };
+
+        await repository.EditAsync(activity);
+        return activity;
     }
 }

@@ -1,38 +1,36 @@
+using System.Security.Claims;
 using BookingApplication.Models;
+using BookingApplication.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApplication.Controllers;
 
 [ApiController]
-[Route("")]
+[Route("user")]
 public class UserController : ControllerBase
 {
-    private readonly SignInManager<IdentityUser> signInManager;
-    private readonly UserManager<IdentityUser> userManager;
+    private readonly IUserService userService;
 
-    public UserController(
-        SignInManager<IdentityUser> signInManager,
-        UserManager<IdentityUser> userManager
-    )
+    public UserController(IUserService userService)
     {
-        this.signInManager = signInManager;
-        this.userManager = userManager;
+        this.userService = userService;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
         try
         {
-            var user = new IdentityUser() { UserName = request.Username, Email = request.Email };
-            var result = await userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
-            {
-                // Return an array of possible errors from UserManager to be handled and displayed on frontend.
-                return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-            }
+            var user = await userService.RegisterAsync(request);
+            if (user == null)
+                return BadRequest("Invalid request");
             return Ok();
+        }
+        catch (IdentityException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch
         {
@@ -41,38 +39,62 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> SignIn(SignInRequest request)
+    public async Task<IActionResult> Login([FromBody] SignInUserRequest request)
     {
         try
         {
-            // Could use UserManager to give different error if the username doesn't exist in database.
+            await userService.LoginAsync(request);
 
-            var result = await signInManager.PasswordSignInAsync(
-                request.Username,
-                request.Password,
-                false,
-                false
-            );
-            if (!result.Succeeded)
-            {
-                // Logic for different results?
-            }
             return Ok();
+        }
+        catch (ArgumentNullException)
+        {
+            return BadRequest("User not found");
+        }
+        catch (IdentityException ex)
+        {
+            return Unauthorized(ex.Message);
         }
         catch
         {
-            return Unauthorized("Invalid credentials");
+            return StatusCode(500, new { errors = "An unexpected error occured." });
         }
+    }
+
+    // Option 1
+    [HttpPut("{id}")]
+    [Authorize]
+    public async Task<IActionResult> Update(string id, EditUserRequest request)
+    {
+        var user = await userService.GetByIdAsync(id);
+        if (user == null || user.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            return BadRequest("");
+        }
+        return Ok();
+    }
+
+    // Option 2
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> Update(EditUserRequest request)
+    {
+        // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+        // var user = await userService.GetByIdAsync(userId);
+
+        var updatedUser = await userService.EditFromRequestAsync(request);
+
+        return Ok();
     }
 }
 
-public class SignInRequest : IRequest
+public class SignInUserRequest : IRequest
 {
     public required string Username { get; set; }
     public required string Password { get; set; }
 }
 
-public class RegisterRequest : IRequest
+public class RegisterUserRequest : IRequest
 {
     public required string Username { get; set; }
     public required string Email { get; set; }
@@ -83,5 +105,10 @@ public class RegisterRequest : IRequest
 
 public class EditUserRequest : IRequest
 {
-    
+    public required string Id { get; set; }
+    public string? Username { get; set; }
+    public string? Email { get; set; }
+    public string? Password { get; set; }
+    public string? Address { get; set; }
+    public string? PhoneNumber { get; set; }
 }

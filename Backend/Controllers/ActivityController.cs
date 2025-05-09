@@ -35,10 +35,13 @@ public class ActivityController : ControllerBase
 
 public class CreateActivityRequest : IRequest
 {
-
+    public required string Name { get; set; }
+    public string? Description { get; set; }
 }
 
 public class EditActivityRequest : IRequest
 {
-    
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
 }

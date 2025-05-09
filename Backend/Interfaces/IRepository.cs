@@ -7,4 +7,5 @@ public interface IRepository<T>
     public Task<IEnumerable<T>> GetAllAsync();
     public Task EditAsync(T updatedEntity);
     public Task DeleteAsync(T entityToRemove);
+    public Task SaveChangesAsync();
 }
