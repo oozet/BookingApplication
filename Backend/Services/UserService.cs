@@ -1,6 +1,8 @@
 using BookingApplication.Controllers;
+using BookingApplication.Helpers;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +11,12 @@ namespace BookingApplication.Services;
 
 public interface IUserService : IService<User, RegisterUserRequest, EditUserRequest>
 {
-    public Task<User> RegisterAsync(RegisterUserRequest request);
     public Task LoginAsync(SignInUserRequest request);
 
     // id, username
     //public Task<Dictionary<string, string>> GetAllAsync();
     public Task<User?> GetByIdAsync(string id);
+    public Task<User?> DeleteAsync(string entityId);
 }
 
 public class UserService : IUserService //: EfService<User, RegisterRequest, EditUserRequest>, IUserService
@@ -35,18 +37,24 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         //this.updaterService = updaterService;
     }
 
-    public Task<User> CreateFromRequestAsync(RegisterUserRequest request)
+    public async Task<User> CreateFromRequestAsync(RegisterUserRequest request)
     {
-        throw new NotImplementedException();
+        var user = new User()
+        {
+            UserName = request.Username,
+            Email = request.Email,
+            PhoneNumber = request.PhoneNumber,
+        };
+        var result = await userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            var errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
+            throw new IdentityException($"Error while creating user: {errorMessages}");
+        }
+        return user;
     }
 
-    public async Task DeleteAsync(User entityToRemove)
-    {
-        await userManager.DeleteAsync(entityToRemove);
-        return;
-    }
-
-    public async Task<User?> DeleteAsync(Guid entityId)
+    public async Task<User?> DeleteAsync(string entityId)
     {
         var user = await userManager.FindByIdAsync(entityId.ToString());
         if (user == null)
@@ -59,22 +67,31 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new IdentityException($"Unable to delete {user.UserName}");
     }
 
-    public async Task EditAsync(User entityToEdit)
+    public Task DeleteAsync(User entityToRemove)
     {
-        var result = await userManager.UpdateAsync(entityToEdit);
-        if (result.Succeeded)
-            return;
+        throw new NotImplementedException();
+    }
 
-        throw new IdentityException($"Unable to update {entityToEdit.UserName}");
+    public Task<User?> DeleteAsync(Guid entityId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task EditAsync(User entityToEdit)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<User> EditFromRequestAsync(EditUserRequest request)
     {
-        var user =
-            await userManager.FindByIdAsync(request.Id)
-            ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
+        // Possible solution for updating User if nothing easier is found.
+        // var user =
+        //     await userManager.FindByIdAsync(request.Id)
+        //     ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
 
-        //updaterService.UpdateEntity(user, request);
+        // EntityUpdaterHelper.UpdateEntity(user, request);
+
+        var user = new User { Id = request.Id, UserName = request.Username };
 
         var result = await userManager.UpdateAsync(user);
         if (result.Succeeded)
@@ -83,7 +100,7 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new IdentityException($"Unable to update {user.UserName}");
     }
 
-    // Implement with pagination?
+    // Implement with pagination if too many users
     public async Task<IEnumerable<User>> GetAllAsync()
     {
         return await userManager.Users.ToListAsync();
@@ -94,9 +111,9 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         return await userManager.FindByIdAsync(id);
     }
 
-    public async Task<User?> GetByIdAsync(Guid entityId)
+    public Task<User?> GetByIdAsync(Guid entityId)
     {
-        return await userManager.FindByIdAsync(entityId.ToString());
+        throw new NotImplementedException();
     }
 
     public async Task LoginAsync(SignInUserRequest request)
@@ -119,52 +136,4 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
 
         return;
     }
-
-    public async Task<User> RegisterAsync(RegisterUserRequest request)
-    {
-        var user = new User()
-        {
-            UserName = request.Username,
-            Email = request.Email,
-            PhoneNumber = request.PhoneNumber,
-        };
-        var result = await userManager.CreateAsync(user, request.Password);
-        if (!result.Succeeded)
-        {
-            var errorMessages = string.Join("; ", result.Errors.Select(e => e.Description));
-            throw new IdentityException($"Error while creating user: {errorMessages}");
-        }
-        return user;
-    }
 }
-
-public class IdentityException(string message) : Exception(message) { }
-
-// public interface IEntityUpdaterService
-// {
-//     void UpdateEntity<T>(T entity, object updateRequest)
-//         where T : class;
-// }
-
-// public class EntityUpdaterService : IEntityUpdaterService
-// {
-//     public void UpdateEntity<T>(T entity, object updateRequest)
-//         where T : class
-//     {
-//         var entityType = entity.GetType();
-//         var requestType = updateRequest.GetType();
-
-//         foreach (var prop in requestType.GetProperties())
-//         {
-//             var entityProp = entityType.GetProperty(prop.Name);
-//             if (entityProp != null && entityProp.CanWrite)
-//             {
-//                 var newValue = prop.GetValue(updateRequest);
-//                 if (newValue != null) // Only update non-null values
-//                 {
-//                     entityProp.SetValue(entity, newValue);
-//                 }
-//             }
-//         }
-//     }
-// }

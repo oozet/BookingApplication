@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
 using BookingApplication.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +23,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var user = await userService.RegisterAsync(request);
+            var user = await userService.CreateFromRequestAsync(request);
             if (user == null)
                 return BadRequest("Invalid request");
             return Ok();
@@ -61,54 +61,56 @@ public class UserController : ControllerBase
         }
     }
 
-    // Option 1
-    [HttpPut("{id}")]
-    [Authorize]
-    public async Task<IActionResult> Update(string id, EditUserRequest request)
-    {
-        var user = await userService.GetByIdAsync(id);
-        if (user == null || user.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
-        {
-            return BadRequest("");
-        }
-        return Ok();
-    }
-
-    // Option 2
     [HttpPut]
     [Authorize]
-    public async Task<IActionResult> Update(EditUserRequest request)
+    public async Task<IActionResult> Update([FromBody] EditUserRequest request)
     {
-        // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
-        // var user = await userService.GetByIdAsync(userId);
+        try
+        {
+            var userId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? throw new Exception("Cannot retrieve user id.");
+            request.Id = userId;
 
-        var updatedUser = await userService.EditFromRequestAsync(request);
+            var updatedUser = await userService.EditFromRequestAsync(request);
 
-        return Ok();
+            return Ok();
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
     }
-}
 
-public class SignInUserRequest : IRequest
-{
-    public required string Username { get; set; }
-    public required string Password { get; set; }
-}
+    [HttpDelete]
+    public async Task<IActionResult> Delete()
+    {
+        try
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
+            await userService.DeleteAsync(userId);
 
-public class RegisterUserRequest : IRequest
-{
-    public required string Username { get; set; }
-    public required string Email { get; set; }
-    public required string Password { get; set; }
-    public string? Address { get; set; }
-    public string? PhoneNumber { get; set; }
-}
+            return Ok();
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
+    }
 
-public class EditUserRequest : IRequest
-{
-    public required string Id { get; set; }
-    public string? Username { get; set; }
-    public string? Email { get; set; }
-    public string? Password { get; set; }
-    public string? Address { get; set; }
-    public string? PhoneNumber { get; set; }
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        try
+        {
+            await userService.DeleteAsync(id);
+
+            return Ok();
+        }
+        catch
+        {
+            return BadRequest($"Unable to delete user with id: {id}");
+        }
+    }
 }
