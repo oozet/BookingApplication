@@ -1,14 +1,15 @@
+using BookingApplication.Data;
 using BookingApplication.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using BookingApplication.Data;
 
 namespace BookingApplication.Repositories;
 
-public class EfRepository<T> : IRepository<T> where T : class
+public class EfRepository<T> : IRepository<T>
+    where T : class
 {
-    protected readonly AppDbContext context;
+    protected readonly BookingAppContext context;
 
-    public EfRepository(AppDbContext context)
+    public EfRepository(BookingAppContext context)
     {
         this.context = context;
     }

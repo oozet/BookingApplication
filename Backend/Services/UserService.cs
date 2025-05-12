@@ -21,17 +21,18 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
 {
     private readonly UserManager<User> userManager;
     private readonly SignInManager<User> signInManager;
-    private readonly EntityUpdaterService updaterService;
+
+    //private readonly EntityUpdaterService updaterService;
 
     public UserService(
         UserManager<User> userManager,
-        SignInManager<User> signInManager,
-        EntityUpdaterService updaterService
+        SignInManager<User> signInManager
+    //EntityUpdaterService updaterService
     )
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
-        this.updaterService = updaterService;
+        //this.updaterService = updaterService;
     }
 
     public Task<User> CreateFromRequestAsync(RegisterUserRequest request)
@@ -73,7 +74,7 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
             await userManager.FindByIdAsync(request.Id)
             ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
 
-        updaterService.UpdateEntity(user, request);
+        //updaterService.UpdateEntity(user, request);
 
         var result = await userManager.UpdateAsync(user);
         if (result.Succeeded)
@@ -139,31 +140,31 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
 
 public class IdentityException(string message) : Exception(message) { }
 
-public interface IEntityUpdaterService
-{
-    void UpdateEntity<T>(T entity, object updateRequest)
-        where T : class;
-}
+// public interface IEntityUpdaterService
+// {
+//     void UpdateEntity<T>(T entity, object updateRequest)
+//         where T : class;
+// }
 
-public class EntityUpdaterService : IEntityUpdaterService
-{
-    public void UpdateEntity<T>(T entity, object updateRequest)
-        where T : class
-    {
-        var entityType = entity.GetType();
-        var requestType = updateRequest.GetType();
+// public class EntityUpdaterService : IEntityUpdaterService
+// {
+//     public void UpdateEntity<T>(T entity, object updateRequest)
+//         where T : class
+//     {
+//         var entityType = entity.GetType();
+//         var requestType = updateRequest.GetType();
 
-        foreach (var prop in requestType.GetProperties())
-        {
-            var entityProp = entityType.GetProperty(prop.Name);
-            if (entityProp != null && entityProp.CanWrite)
-            {
-                var newValue = prop.GetValue(updateRequest);
-                if (newValue != null) // Only update non-null values
-                {
-                    entityProp.SetValue(entity, newValue);
-                }
-            }
-        }
-    }
-}
+//         foreach (var prop in requestType.GetProperties())
+//         {
+//             var entityProp = entityType.GetProperty(prop.Name);
+//             if (entityProp != null && entityProp.CanWrite)
+//             {
+//                 var newValue = prop.GetValue(updateRequest);
+//                 if (newValue != null) // Only update non-null values
+//                 {
+//                     entityProp.SetValue(entity, newValue);
+//                 }
+//             }
+//         }
+//     }
+// }
