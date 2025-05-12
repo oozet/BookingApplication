@@ -3,11 +3,28 @@
 This is to help understand how the models looks like in the actual database, 
 as well as making it easier to make sure the database tables looks the way we wanted to/discussed.
 
-CREATE TABLE "Activity" (
+CREATE TABLE "Activities" (
     "Id" uuid NOT NULL,
     "Name" text NOT NULL,
     "Description" text,
-    CONSTRAINT "PK_Activity" PRIMARY KEY ("Id")
+    CONSTRAINT "PK_Activities" PRIMARY KEY ("Id")
+);
+
+
+CREATE TABLE "AspNetRoles" (
+    "Id" text NOT NULL,
+    "Name" character varying(256),
+    "NormalizedName" character varying(256),
+    "ConcurrencyStamp" text,
+    CONSTRAINT "PK_AspNetRoles" PRIMARY KEY ("Id")
+);
+
+
+CREATE TABLE "Activities" (
+    "Id" uuid NOT NULL,
+    "Name" text NOT NULL,
+    "Description" text,
+    CONSTRAINT "PK_Activities" PRIMARY KEY ("Id")
 );
 
 
@@ -22,6 +39,7 @@ CREATE TABLE "AspNetRoles" (
 
 CREATE TABLE "AspNetUsers" (
     "Id" text NOT NULL,
+    "Adress" text,
     "UserName" character varying(256),
     "NormalizedUserName" character varying(256),
     "Email" character varying(256),
@@ -100,7 +118,7 @@ CREATE TABLE "AspNetUserTokens" (
 );
 
 
-CREATE TABLE "Booking" (
+CREATE TABLE "Bookings" (
     "Id" uuid NOT NULL,
     "StartDate" timestamp with time zone NOT NULL,
     "EndDate" timestamp with time zone NOT NULL,
@@ -108,10 +126,10 @@ CREATE TABLE "Booking" (
     "RoomId" uuid NOT NULL,
     "UserId" text NOT NULL,
     "ActivityId" uuid,
-    CONSTRAINT "PK_Booking" PRIMARY KEY ("Id"),
-    CONSTRAINT "FK_Booking_Activity_ActivityId" FOREIGN KEY ("ActivityId") REFERENCES "Activity" ("Id"),
-    CONSTRAINT "FK_Booking_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE,
-    CONSTRAINT "FK_Booking_Rooms_RoomId" FOREIGN KEY ("RoomId") REFERENCES "Rooms" ("Id") ON DELETE CASCADE
+    CONSTRAINT "PK_Bookings" PRIMARY KEY ("Id"),
+    CONSTRAINT "FK_Bookings_Activities_ActivityId" FOREIGN KEY ("ActivityId") REFERENCES "Activities" ("Id"),
+    CONSTRAINT "FK_Bookings_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_Bookings_Rooms_RoomId" FOREIGN KEY ("RoomId") REFERENCES "Rooms" ("Id") ON DELETE CASCADE
 );
 
 
@@ -136,10 +154,10 @@ CREATE INDEX "EmailIndex" ON "AspNetUsers" ("NormalizedEmail");
 CREATE UNIQUE INDEX "UserNameIndex" ON "AspNetUsers" ("NormalizedUserName");
 
 
-CREATE INDEX "IX_Booking_ActivityId" ON "Booking" ("ActivityId");
+CREATE INDEX "IX_Bookings_ActivityId" ON "Bookings" ("ActivityId");
 
 
-CREATE INDEX "IX_Booking_RoomId" ON "Booking" ("RoomId");
+CREATE INDEX "IX_Bookings_RoomId" ON "Bookings" ("RoomId");
 
 
-CREATE INDEX "IX_Booking_UserId" ON "Booking" ("UserId");
+CREATE INDEX "IX_Bookings_UserId" ON "Bookings" ("UserId");

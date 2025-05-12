@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("")]
+[Route("schedule")]
 public class ScheduleController : ControllerBase
 {
-    [HttpGet("{}")] 
-    public async Task<IActionResult> GetRooms([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    [HttpGet]
+    public async Task<IActionResult> GetRooms(
+        [FromQuery] DateTime startDate,
+        [FromQuery] DateTime endDate
+    )
     {
         throw new NotImplementedException();
     }

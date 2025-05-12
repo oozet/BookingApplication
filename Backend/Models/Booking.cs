@@ -16,7 +16,7 @@ public class Booking
 
     public required string UserId { get; set; }
     [ForeignKey("UserId")]
-    public IdentityUser? User { get; set; }
+    public User? User { get; set; }
 
     public Guid? ActivityId { get; set; }
     [ForeignKey("ActivityId")]
