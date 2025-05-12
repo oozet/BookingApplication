@@ -6,10 +6,12 @@ public interface IService<T, TAddRequest, TEditRequest>
     where TEditRequest : IRequest
 {
     public Task<T> CreateFromRequestAsync(TAddRequest request);
-    public Task<T?> GetByIdAsync(Guid entityId);
+    public Task<T?> GetByIdAsync<TKey>(TKey entityId)
+        where TKey : notnull;
     public Task<IEnumerable<T>> GetAllAsync();
     public Task EditAsync(T entityToEdit);
     public Task<T> EditFromRequestAsync(TEditRequest request);
     public Task DeleteAsync(T entityToRemove);
-    public Task<T?> DeleteAsync(Guid entityId);
+    public Task<T?> DeleteAsync<TKey>(TKey entityId)
+        where TKey : notnull;
 }
