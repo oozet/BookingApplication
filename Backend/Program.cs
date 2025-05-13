@@ -29,14 +29,17 @@ public class Program
         //     .AddEntityFrameworkStores<BookingAppContext>()
         //     .AddApiEndpoints();
 
-        // builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+        builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
 
+        // For roles.
+        builder.Services.AddAuthorization();
 
         var app = builder.Build();
 
-        //app.MapIdentityApi<Models.User>();
-
         app.MapControllers();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.Run();
     }
 }

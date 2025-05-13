@@ -99,7 +99,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(string id)
     {
         try
