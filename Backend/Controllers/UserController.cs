@@ -90,7 +90,7 @@ public class UserController : ControllerBase
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? throw new Exception();
             await userService.DeleteAsync(userId);
 
-            return Ok();
+            return NoContent();
         }
         catch
         {
@@ -106,7 +106,7 @@ public class UserController : ControllerBase
         {
             await userService.DeleteAsync(id);
 
-            return Ok();
+            return NoContent();
         }
         catch
         {

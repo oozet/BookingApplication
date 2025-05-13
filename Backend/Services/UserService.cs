@@ -84,12 +84,12 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
 
     public async Task<User> EditFromRequestAsync(EditUserRequest request)
     {
-        // Possible solution for updating User if nothing easier is found.
+        // // Possible solution for updating User if nothing easier is found.
         // var user =
         //     await userManager.FindByIdAsync(request.Id)
         //     ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
 
-        // EntityUpdaterHelper.UpdateEntity(user, request);
+        // EntityUpdaterHelper.UpdateEntity<User>(user, request);
 
         var user = new User { Id = request.Id, UserName = request.Username };
 
@@ -120,7 +120,7 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
     {
         _ =
             await userManager.FindByNameAsync(request.Username)
-            ?? throw new ArgumentNullException("User not found.");
+            ?? throw new IdentityException("Invalid username");
 
         var result = await signInManager.PasswordSignInAsync(
             request.Username,
