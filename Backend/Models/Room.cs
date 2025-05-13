@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace BookingApplication.Models;
 
+[Index(nameof(RoomNumber), IsUnique = true)]
 public class Room
 {
     public required Guid Id { get; set; }
