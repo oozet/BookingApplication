@@ -11,4 +11,13 @@ public class BookingAppContext(DbContextOptions<BookingAppContext> options)
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Activity> Activities { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.HasPostgresExtension("btree_gist");
+    }
+
+
 }
