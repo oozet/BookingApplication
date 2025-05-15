@@ -3,6 +3,7 @@ using BookingApplication.Models;
 using BookingApplication.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BookingApplication;
 
