@@ -21,7 +21,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
         {
             if (request.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
             {
-                return Unauthorized("User id does not match logged in user. To book for someone else, please login as an admin");
+                return Forbid("User id does not match logged in user. To book for someone else, please login as an admin");
             }
 
             var booking = await bookingService.CreateFromRequestAsync(request);
@@ -67,9 +67,14 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
     {
         try
         {
+            var booking = await bookingService.GetByIdAsync(bookingId);
+            if (booking?.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
+            {
+                return Forbid("To cancel someone else's booking, please log in as an admin.");
+            }
             // We imagine a method named something like this exists and we'll change it when 
             // the actual method does exist.
-            await bookingService.CancelById();
+            await bookingService.CancelById(bookingId);
             return Ok();
         }
         catch (Exception)
