@@ -1,4 +1,5 @@
 using BookingApplication.Controllers;
+using BookingApplication.Exceptions;
 using BookingApplication.Helpers;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;

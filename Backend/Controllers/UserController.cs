@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BookingApplication.Exceptions;
 using BookingApplication.Models.Dtos;
 using BookingApplication.Services;
 using Microsoft.AspNetCore.Authorization;
