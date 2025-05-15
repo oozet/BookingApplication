@@ -1,8 +1,6 @@
-using BookingApplication.Controllers;
-using BookingApplication.Data;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
-using BookingApplication.Repositories;
+using BookingApplication.Models.Dtos;
 
 namespace BookingApplication.Services;
 
@@ -35,7 +33,7 @@ public class RoomService : EfService<Room, CreateRoomRequest, EditRoomRequest>
 
         var room = new Room
         {
-            Id = new Guid(), // ?
+            Id = Guid.NewGuid(),
             Name = request.Name,
             RoomNumber = request.RoomNumber,
             Limit = request.Limit,
@@ -77,23 +75,6 @@ public class RoomService : EfService<Room, CreateRoomRequest, EditRoomRequest>
         {
             throw new Exception("The collection of bookings can't be null");
         }
-
-        /*
-        Should we find the entity and edit that or create a new one? If we find it bookings doesn't need to be in the request
-        If so theres no need to have "EditAsync" in the repositories since we can just save the changes here
-        try{ 
-            var room = await GetByIdAsync(request.Id); 
-            room.Name = request.Name;
-            room.Description = request.Description;
-            await repository.SaveChangesAsync();
-            return activity;
-        }
-        catch (Exeption)
-        {
-            throw;
-        }
-
-        */
 
         var room = new Room 
         {

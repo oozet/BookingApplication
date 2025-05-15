@@ -32,28 +32,18 @@ public abstract class EfService<T, TAddRequest, TEditRequest> : IService<T, TAdd
     public abstract Task<T> EditFromRequestAsync(TEditRequest request);
     /*  Same here as with AddFromRequest*/
 
-
-    public async Task DeleteAsync(T entityToRemove)
-    {
-        await repository.DeleteAsync(entityToRemove);
-    }
-
-    public async Task<T?> DeleteAsync(Guid entityId) 
+    public async Task<bool> DeleteAsync(Guid entityId) 
     {
         var entity = await GetByIdAsync(entityId);
 
         if(entity == null)
         {
-            return null;
+            return false;
         }
 
-        await repository.DeleteAsync(entity);
-        return entity;
-    }
-
-    public async Task<T?> GetByIdAsync(Guid entityId)
-    {
-        return await repository.GetByIdAsync(entityId);
+        // await repository.DeleteAsync(entity);
+        await repository.DeleteAsync(entityId.ToString());
+        return true;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
@@ -64,5 +54,28 @@ public abstract class EfService<T, TAddRequest, TEditRequest> : IService<T, TAdd
     public async Task EditAsync(T entityToUpdate)
     {
         await repository.EditAsync(entityToUpdate);
+    }
+
+    public async Task<T?> GetByIdAsync<TKey>(TKey entityId) where TKey : notnull
+    {
+        return await repository.GetByIdAsync(Guid.Parse(entityId.ToString()!));
+    }
+
+    public async Task DeleteAsync(T entityToRemove)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<T?> DeleteAsync<TKey>(TKey entityId) where TKey : notnull
+    {
+        var entity = await GetByIdAsync(entityId);
+
+        if(entity == null)
+        {
+            return null;
+        }
+
+        await repository.DeleteAsync(entityId.ToString()!);
+        return entity;
     }
 }

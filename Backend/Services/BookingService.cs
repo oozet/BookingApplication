@@ -40,7 +40,7 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
             ActivityId = request.ActivityId,
         };
 
-        await repository.AddAsync(booking);
+        await repository.CreateAsync(booking);
         return booking;
     }
 
@@ -66,12 +66,12 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
             ActivityId = request.ActivityId
         };
 
-        await repository.UpdateAsync(booking);
+        await repository.EditAsync(booking);
         return booking;
     }
 
-    public async Task<List<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
+    /*public async Task<List<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
     {
-        return await repository.GetByTimeSpanAsync(start, end);
-    }
+        return (List<Booking>)await ((BookingRepository)repository).GetByTimeSpanAsync(start, end);
+    }*/
 }
