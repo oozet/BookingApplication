@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
 using BookingApplication.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -48,6 +49,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
             }
 
             var booking = await bookingService.EditFromRequestAsync(request);
+            return Created(nameof(Edit), new { Message = $"Edited booking with Id {booking.Id}", Booking = booking });
         }
         catch (ArgumentException e)
         {
@@ -63,26 +65,36 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
     [HttpDelete("{bookingId}")] //
     public async Task<IActionResult> Cancel(Guid bookingId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // We imagine a method named something like this exists and we'll change it when 
+            // the actual method does exist.
+            await bookingService.CancelById();
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return BadRequest("An unspecified error has happened");
+        }
     }
 }
 
-public class CreateBookingRequest : IRequest
-{
-    public required DateTime StartDate { get; set; }
-    public required DateTime EndDate { get; set; }
-    public required Guid RoomId { get; set; }
-    public required string UserId { get; set; }
-    public Guid? ActivityId { get; set; }
-}
+// public class CreateBookingRequest : IRequest
+// {
+//     public required DateTime StartDate { get; set; }
+//     public required DateTime EndDate { get; set; }
+//     public required Guid RoomId { get; set; }
+//     public required string UserId { get; set; }
+//     public Guid? ActivityId { get; set; }
+// }
 
-public class EditBookingRequest : IRequest
-{
-    public required Guid Id { get; set; }
-    public required DateTime StartDate { get; set; }
-    public required DateTime EndDate { get; set; }
-    public required Guid RoomId { get; set; }
-    public required string UserId { get; set; }
-    public Guid? ActivityId { get; set; }
-}
+// public class EditBookingRequest : IRequest
+// {
+//     public required Guid Id { get; set; }
+//     public required DateTime StartDate { get; set; }
+//     public required DateTime EndDate { get; set; }
+//     public required Guid RoomId { get; set; }
+//     public required string UserId { get; set; }
+//     public Guid? ActivityId { get; set; }
+// }
 
