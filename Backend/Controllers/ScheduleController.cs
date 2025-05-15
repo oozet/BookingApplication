@@ -1,12 +1,34 @@
+using BookingApplication.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("")]
+[Route("schedule")]
 public class ScheduleController : ControllerBase
 {
-    [HttpGet("{}")] 
-    public async Task<IActionResult> GetRooms([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    private readonly RoomService roomService;
+
+    public ScheduleController(RoomService roomService)
     {
-        throw new NotImplementedException();
+        this.roomService = roomService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetRooms(
+        [FromQuery] DateTime startDate,
+        [FromQuery] DateTime endDate
+    )
+    {
+        try
+        {
+            // var rooms = roomService.GetRoomsFromSpan();
+            // return Ok(rooms);
+
+            return Ok();
+        }
+        catch (System.Exception)
+        {
+            return BadRequest("");
+        }
     }
 }

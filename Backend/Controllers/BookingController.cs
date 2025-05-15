@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingApplication.Controllers;
 
 [ApiController]
-[Route("")]
-public class BookingController : ControllerBase 
+[Route("booking")]
+public class BookingController : ControllerBase
 {
     [Authorize]
-    [HttpPost("")]
+    [HttpPost]
     public async Task<IActionResult> Book([FromBody] CreateBookingRequest request)
     {
         throw new NotImplementedException();
@@ -22,7 +22,7 @@ public class BookingController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete("{bookingId}")] // 
+    [HttpDelete("{bookingId}")] //
     public async Task<IActionResult> Cancel(Guid bookingId)
     {
         throw new NotImplementedException();
