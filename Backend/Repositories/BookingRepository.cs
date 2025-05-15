@@ -1,5 +1,6 @@
 public class BookingRepository : IRepository<Booking>
 {
+<<<<<<< Updated upstream
     private readonly AppDbContext _context;
 
     public BookingRepository(ApplicationDbContext context)
@@ -24,6 +25,30 @@ public class BookingRepository : IRepository<Booking>
             .Include(b => b.Activity)
             .ToListAsync();
     }
+=======
+    public class BookingRepository : EfRepository<Booking>
+    {
+        public BookingRepository(BookingAppContext context)
+            : base(context) { }
+
+        public override async Task<Booking?> GetByIdAsync(Guid id)
+        {
+            return await _context
+                .Bookings.Include(b => b.User)
+                .Include(b => b.Room)
+                .Include(b => b.Activity)
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
+
+        public override async Task<IEnumerable<Booking>> GetAllAsync()
+        {
+            return await _context
+                .Bookings.Include(b => b.User)
+                .Include(b => b.Room)
+                .Include(b => b.Activity)
+                .ToListAsync();
+        }
+>>>>>>> Stashed changes
 
     public async Task<Booking> AddAsync(Booking booking)
     {
@@ -43,6 +68,7 @@ public class BookingRepository : IRepository<Booking>
         var booking = await _context.Bookings.FindAsync(id);
         if (booking != null)
         {
+<<<<<<< Updated upstream
             _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
         }
@@ -66,3 +92,13 @@ public class BookingRepository : IRepository<Booking>
             .ToListAsync();
     }
 }
+=======
+            return await _context
+                .Bookings.Where(b => b.UserId == userId.ToString())
+                .Include(b => b.Room)
+                .Include(b => b.Activity)
+                .ToListAsync();
+        }
+    }
+}
+>>>>>>> Stashed changes

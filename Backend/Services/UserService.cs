@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Services;
 
-public interface IUserService : IService<User, RegisterUserRequest, EditUserRequest>
+public interface IUserService : IService<User, RegisterUserRequest, EditUserRequest, string>
 {
     public Task LoginAsync(SignInUserRequest request);
 
     // id, username
     //public Task<Dictionary<string, string>> GetAllAsync();
-    public Task<User?> GetByIdAsync(string id);
-    public Task<User?> DeleteAsync(string entityId);
+    // public Task<User?> GetByIdAsync(string id);
+    // public Task<User?> DeleteAsync(string entityId);
 }
 
 public class UserService : IUserService //: EfService<User, RegisterRequest, EditUserRequest>, IUserService
@@ -72,11 +72,6 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new NotImplementedException();
     }
 
-    public Task<User?> DeleteAsync(Guid entityId)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task EditAsync(User entityToEdit)
     {
         throw new NotImplementedException();
@@ -109,11 +104,6 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
     public async Task<User?> GetByIdAsync(string id)
     {
         return await userManager.FindByIdAsync(id);
-    }
-
-    public Task<User?> GetByIdAsync(Guid entityId)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task LoginAsync(SignInUserRequest request)
