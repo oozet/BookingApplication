@@ -1,19 +1,23 @@
+using BookingApplication.Data;
+using BookingApplication.Models;
+using Microsoft.EntityFrameworkCore;
+
 public class BookingRepository : IRepository<Booking>
 {
-    private readonly AppDbContext _context;
+    private readonly BookingAppContext _context;
 
-    public BookingRepository(ApplicationDbContext context)
+    public BookingRepository(BookingAppContext context)
     {
         _context = context;
     }
 
-    public async Task<Booking> GetByIdAsync(string id)
+    public async Task<Booking?> GetByIdAsync(string id)
     {
         return await _context.Bookings
             .Include(b => b.User)
             .Include(b => b.Room)
             .Include(b => b.Activity)
-            .FirstOrDefaultAsync(b => b.Id == id);
+            .FirstOrDefaultAsync(b => b.Id.ToString() == id);
     }
 
     public async Task<IEnumerable<Booking>> GetAllAsync()
@@ -25,11 +29,10 @@ public class BookingRepository : IRepository<Booking>
             .ToListAsync();
     }
 
-    public async Task<Booking> AddAsync(Booking booking)
+    public async Task AddAsync(Booking booking)
     {
         _context.Bookings.Add(booking);
         await _context.SaveChangesAsync();
-        return booking;
     }
 
     public async Task UpdateAsync(Booking booking)
@@ -38,14 +41,10 @@ public class BookingRepository : IRepository<Booking>
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task DeleteAsync(Booking booking)
     {
-        var booking = await _context.Bookings.FindAsync(id);
-        if (booking != null)
-        {
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
-        }
+        _context.Bookings.Remove(booking);
+        await _context.SaveChangesAsync();
     }
   public async Task<IEnumerable<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
     {

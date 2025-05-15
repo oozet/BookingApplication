@@ -4,7 +4,7 @@ using BookingApplication.Data;
 
 namespace BookingApplication.Repositories;
 
-public class EfRepository<T> : IRepository<T> where T : class
+/*public class EfRepository<T> : IRepository<T> where T : class
 {
     protected readonly AppDbContext context;
 
@@ -47,4 +47,4 @@ public class EfRepository<T> : IRepository<T> where T : class
     {
         await context.SaveChangesAsync();
     }
-}
+}*/

@@ -10,6 +10,5 @@ public interface IService<T, TAddRequest, TEditRequest>
     public Task<IEnumerable<T>> GetAllAsync();
     public Task EditAsync(T entityToEdit);
     public Task<T> EditFromRequestAsync(TEditRequest request);
-    public Task DeleteAsync(T entityToRemove);
-    public Task<T?> DeleteAsync(Guid entityId);
+    public Task<bool> DeleteAsync(Guid entityId);
 }

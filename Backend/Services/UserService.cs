@@ -45,15 +45,15 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         return;
     }
 
-    public async Task<User?> DeleteAsync(Guid entityId)
+    public async Task<bool> DeleteAsync(Guid entityId)
     {
         var user = await userManager.FindByIdAsync(entityId.ToString());
         if (user == null)
-            return null;
+            return false;
 
         var result = await userManager.DeleteAsync(user);
         if (result.Succeeded)
-            return null;
+            return true;
 
         throw new IdentityException($"Unable to delete {user.UserName}");
     }

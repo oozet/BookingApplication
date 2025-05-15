@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Identity;
 
 public interface IRepository<T> where T : class   
 {
-    Task<T> GetByIdAsync(string id);
+    Task<T?> GetByIdAsync(string id);
     Task<IEnumerable<T>> GetAllAsync();
     Task AddAsync(T entity);
     Task UpdateAsync(T entity);
-    Task DeleteAsync(string id);
+    Task DeleteAsync(T entity);
 }
 
-public class UserRepository : IRepository<User> 
+/*public class UserRepository : IRepository<User> 
 {
     private readonly AppDbContext _context;
 
@@ -67,4 +67,4 @@ public class UserRepository : IRepository<User>
 //     {
         
 //     }
-// }
+// }*/
