@@ -17,7 +17,7 @@ public class Program
         );
 
         builder
-            .Services.AddIdentity<User, IdentityRole>()
+            .Services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<BookingAppContext>()
             .AddDefaultTokenProviders();
 
