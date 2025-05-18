@@ -9,7 +9,7 @@ namespace BookingApplication;
 
 public class Program
 {
-    public async static void Main(string[] args)
+    public async static Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +20,8 @@ public class Program
         builder
             .Services.AddIdentity<User, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<BookingAppContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddRoles<IdentityRole<Guid>>();
 
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserService, UserService>();
@@ -41,6 +42,7 @@ public class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
         await CreateDefaultRoles(app);
         await CreateAdminAccount(app);
 
@@ -53,15 +55,15 @@ public class Program
     {
         using var scope = app.Services.CreateAsyncScope();
 
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         if (await roleManager.FindByNameAsync("Admin") == null)
         {
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
         }
         if (await roleManager.FindByNameAsync("User") == null)
         {
-            await roleManager.CreateAsync(new IdentityRole("User"));
+            await roleManager.CreateAsync(new IdentityRole<Guid>("User"));
         }
     }
 
@@ -74,7 +76,7 @@ public class Program
         if (await userManager.FindByNameAsync("Admin") == null)
         {
             var user = new User { UserName = "Admin" };
-            var password = "password";
+            var password = "Pass123!";
             var createUserResult = await userManager.CreateAsync(user, password);
             if (!createUserResult.Succeeded)
             {

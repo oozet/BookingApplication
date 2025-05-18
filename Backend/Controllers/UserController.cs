@@ -71,7 +71,7 @@ public class UserController : ControllerBase
             var userId =
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new Exception("Cannot retrieve user id.");
-            request.Id = userId;
+            request.Id = Guid.Parse(userId);
 
             var updatedUser = await userService.EditFromRequestAsync(request);
 

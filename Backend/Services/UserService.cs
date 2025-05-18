@@ -68,9 +68,13 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new IdentityException($"Unable to delete {user.UserName}");
     }
 
-    public Task DeleteAsync(User entityToRemove)
+    public async Task DeleteAsync(User entityToRemove)
     {
-        throw new NotImplementedException();
+        var result = await userManager.DeleteAsync(entityToRemove);
+        if (result.Succeeded)
+            return;
+
+        throw new IdentityException($"Unable to delete {entityToRemove.UserName}");
     }
 
     public Task<User?> DeleteAsync(Guid entityId)
@@ -136,5 +140,10 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         }
 
         return;
+    }
+
+    Task IService<User, RegisterUserRequest, EditUserRequest>.DeleteAsync(Guid entityId)
+    {
+        return DeleteAsync(entityId);
     }
 }

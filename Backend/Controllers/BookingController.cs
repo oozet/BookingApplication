@@ -19,7 +19,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
     {
         try
         {
-            if (request.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
+            if (request.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
             {
                 return Forbid("User id does not match logged in user. To book for someone else, please login as an admin");
             }
@@ -43,7 +43,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
     {
         try
         {
-            if (request.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
+            if (request.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
             {
                 return Unauthorized("User id does not match logged in user. To edit a booking for someone else or transfer a booking to someone else, please login as an admin");
             }
@@ -68,13 +68,17 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
         try
         {
             var booking = await bookingService.GetByIdAsync(bookingId);
-            if (booking?.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
+            if (booking?.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier) || !User.IsInRole("Admin"))
             {
                 return Forbid("To cancel someone else's booking, please log in as an admin.");
             }
             // We imagine a method named something like this exists and we'll change it when 
             // the actual method does exist.
-            await bookingService.CancelById(bookingId);
+            // await bookingService.CancelById(bookingId);
+
+            // Can we not use delete?
+            await bookingService.DeleteAsync(bookingId);
+
             return Ok();
         }
         catch (Exception)
