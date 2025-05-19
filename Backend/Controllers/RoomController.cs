@@ -1,59 +1,96 @@
-using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
+using BookingApplication.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingApplication.Controllers;
 
 [ApiController]
-[Route("room")]
-public class RoomController : ControllerBase
+[Route("")]
+public class RoomController : ControllerBase 
 {
-    [Authorize(Roles = "Admin")]
-    [HttpPost("")]
-    public async Task<IActionResult> Create([FromBody] CreateBookingRequest request)
+    private readonly RoomService roomService;
+
+    public RoomController(RoomService roomService)
     {
-        throw new NotImplementedException();
+        this.roomService = roomService;
+    }
+
+    [Authorize(Roles ="Admin")]
+    [HttpPost("")]
+    public async Task<IActionResult> Create([FromBody] CreateRoomRequest request)
+    {
+        try
+        {
+            var room = await roomService.CreateFromRequestAsync(request);
+
+            if (room == null)
+                return BadRequest("Invalid request");
+                
+            return Ok(room);
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
     }
 
     [Authorize(Roles = "Admin")]
     [HttpPut("{roomId}")]
-    public async Task<IActionResult> Update(Guid roomId, [FromBody] EditBookingRequest request)
+    public async Task<IActionResult> Update(Guid roomId, [FromBody] EditRoomRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var room = await roomService.GetByIdAsync(roomId);
+
+            if (room == null)
+                return NotFound();
+
+            room = await roomService.EditFromRequestAsync(request);
+            return Ok(room);
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles ="Admin")]
     [HttpDelete("{roomId}")]
     public async Task<IActionResult> Delete(Guid roomId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var room = await roomService.GetByIdAsync(roomId);
+
+            if (room == null)
+                return NotFound();
+
+            await roomService.DeleteAsync(roomId);
+            return Ok();
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpGet("{roomId}")] //
+    [Authorize(Roles ="Admin")]
+    [HttpGet("{roomId}")] // 
     public async Task<IActionResult> Get(Guid roomId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var room = await roomService.GetByIdAsync(roomId);
+
+            if (room == null)
+                return NotFound();
+
+            return Ok(room);
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
     }
-}
-
-public class CreateRoomRequest : IRequest
-{
-    public required string Name { get; set; }
-    public required int RoomNumber { get; set; }
-    public required int Limit { get; set; }
-    public required int Area { get; set; }
-    public required double Price { get; set; }
-}
-
-public class EditRoomRequest : IRequest
-{
-    public required Guid Id { get; set; }
-    public required string Name { get; set; }
-    public required int RoomNumber { get; set; }
-    public required int Limit { get; set; }
-    public required int Area { get; set; }
-    public required double Price { get; set; }
-    public required ICollection<Booking> Bookings { get; set; }
 }

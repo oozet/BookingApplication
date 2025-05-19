@@ -77,9 +77,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
             {
                 return Forbid("To cancel someone else's booking, please log in as an admin.");
             }
-            // We imagine a method named something like this exists and we'll change it when 
-            // the actual method does exist.
-            await bookingService.CancelById(bookingId);
+            await bookingService.DeleteAsync(bookingId);
             return Ok();
         }
         catch (Exception)
