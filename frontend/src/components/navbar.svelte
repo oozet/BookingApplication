@@ -6,9 +6,9 @@
 		<h1 class="title">Booking Application</h1>
 	</div>
 	<div class="bottomnav">
-		<div class="bottom-left"><a href="/">Home</a><a href="/about">About</a></div>
+		<div class="bottom-left"><a href="/">Home</a><a href="/about">About</a><a href="/booking">Booking</a></div>
 		<div class="bottom-middle">Middle</div>
-		<div class="bottom-right">Right</div>
+		<div class="bottom-right"></div>
 	</div>
 </nav>
 
