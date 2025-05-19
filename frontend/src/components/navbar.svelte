@@ -3,7 +3,7 @@
 
 <nav class="nav-bar">
 	<div class="topnav">
-		<h1 class="title">Booking App</h1>
+		<h1 class="title">Booking Application</h1>
 	</div>
 	<div class="bottomnav">
 		<div class="bottom-left"><a href="/">Home</a><a href="/about">About</a></div>
@@ -14,7 +14,7 @@
 
 <style>
 	.nav-bar {
-		background-color: black;
+		background-color: gray;
 		width: 100%;
 		height: 6rem;
 		margin: 0;

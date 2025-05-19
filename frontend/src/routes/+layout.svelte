@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../../static/global.css';
 	import Navbar from '../components/navbar.svelte';
 
 	let { children } = $props();
@@ -7,13 +8,3 @@
 <Navbar />
 
 {@render children()}
-
-<style>
-	:global(body) {
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		align-items: center;
-	}
-</style>
