@@ -34,32 +34,6 @@
 		color: white;
 	}
 
-	.bottomnav {
-		display: grid;
-		grid-template-columns: 2fr 8fr 2fr;
-	}
-
-	.bottom-left {
-		display: flex;
-		gap: 1rem;
-		justify-content: flex-start;
-		align-items: center;
-		margin-left: 1rem;
-	}
-
-	.bottom-middle {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.bottom-right {
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-		margin-right: 1rem;
-	}
-
 	nav a,
 	nav a:visited {
 		color: white;
@@ -68,5 +42,37 @@
 
 	nav a:hover {
 		color: orange;
+	}
+
+	.bottomnav {
+		display: none;
+	}
+
+	@media only screen and (min-width: 600px) {
+		.bottomnav {
+			display: grid;
+			grid-template-columns: 2fr 8fr 2fr;
+		}
+
+		.bottom-left {
+			display: flex;
+			gap: 1rem;
+			justify-content: flex-start;
+			align-items: center;
+			margin-left: 1rem;
+		}
+
+		.bottom-middle {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.bottom-right {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			margin-right: 1rem;
+		}
 	}
 </style>
