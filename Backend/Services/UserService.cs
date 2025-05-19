@@ -12,7 +12,7 @@ namespace BookingApplication.Services;
 
 public interface IUserService : IService<User, RegisterUserRequest, EditUserRequest>
 {
-    public Task LoginAsync(SignInUserRequest request);
+    public Task<SignInUserResponse> LoginAsync(SignInUserRequest request);
 
     // id, username
     //public Task<Dictionary<string, string>> GetAllAsync();
@@ -121,9 +121,9 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new NotImplementedException();
     }
 
-    public async Task LoginAsync(SignInUserRequest request)
+    public async Task<SignInUserResponse> LoginAsync(SignInUserRequest request)
     {
-        _ =
+        var user =
             await userManager.FindByNameAsync(request.Username)
             ?? throw new IdentityException("Invalid username");
 
@@ -134,12 +134,11 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
             false
         );
 
-        if (!result.Succeeded)
+        if (result.Succeeded)
         {
-            throw new IdentityException($"Invalid username or password");
+            return new SignInUserResponse { Username = user.UserName! };
         }
-
-        return;
+        throw new IdentityException($"Invalid username or password");
     }
 
     Task IService<User, RegisterUserRequest, EditUserRequest>.DeleteAsync(Guid entityId)

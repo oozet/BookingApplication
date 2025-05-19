@@ -35,6 +35,22 @@ public class Program
 
         // For roles.
         builder.Services.AddAuthorization();
+        
+        // Cors for frontend and cookies
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowAll",
+                builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:5173")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                }
+            );
+        });
 
         var app = builder.Build();
 
@@ -42,6 +58,9 @@ public class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseCors("AllowAll");
+        app.UseHttpsRedirection();
 
         await CreateDefaultRoles(app);
         await CreateAdminAccount(app);
