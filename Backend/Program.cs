@@ -35,7 +35,7 @@ public class Program
 
         // For roles.
         builder.Services.AddAuthorization();
-        
+
         // Cors for frontend and cookies
         builder.Services.AddCors(options =>
         {
@@ -56,11 +56,13 @@ public class Program
 
         app.MapControllers();
 
+        //Must be before Authent/Author
+        app.UseCors("AllowAll");
+
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseCors("AllowAll");
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
 
         await CreateDefaultRoles(app);
         await CreateAdminAccount(app);
