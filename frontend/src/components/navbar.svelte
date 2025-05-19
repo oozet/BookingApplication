@@ -52,32 +52,30 @@
 		display: none;
 	}
 
-	@media only screen and (min-width: 600px) {
-		.bottomnav {
-			display: grid;
-			grid-template-columns: 2fr 8fr 2fr;
-			height: 2rem;
-		}
+	.bottomnav {
+		display: grid;
+		grid-template-columns: 2fr 8fr 2fr;
+		height: 2rem;
+	}
 
-		.bottom-left {
-			display: flex;
-			gap: 1rem;
-			justify-content: flex-start;
-			align-items: center;
-			margin-left: 1rem;
-		}
+	.bottom-left {
+		display: flex;
+		gap: 1rem;
+		justify-content: flex-start;
+		align-items: center;
+		margin-left: 1rem;
+	}
 
-		.bottom-middle {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
+	.bottom-middle {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
-		.bottom-right {
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			margin-right: 1rem;
-		}
+	.bottom-right {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		margin-right: 1rem;
 	}
 </style>
