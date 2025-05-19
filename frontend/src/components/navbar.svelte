@@ -6,8 +6,10 @@
 		<h1 class="title">Booking Application</h1>
 	</div>
 	<div class="bottomnav">
-		<div class="bottom-left"><a href="/">Home</a><a href="/about">About</a><a href="/booking">Booking</a></div>
-		<div class="bottom-middle">Middle</div>
+		<div class="bottom-left">
+			<a href="/">Home</a><a href="/about">About</a><a href="/booking">Booking</a>
+		</div>
+		<div class="bottom-middle"></div>
 		<div class="bottom-right"></div>
 	</div>
 </nav>
@@ -16,7 +18,6 @@
 	.nav-bar {
 		background-color: gray;
 		width: 100%;
-		height: 6rem;
 		margin: 0;
 	}
 
@@ -28,6 +29,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		flex-direction: column;
+		height: 4rem;
+		margin-top: 0.5rem;
 	}
 
 	.title {
@@ -52,6 +56,7 @@
 		.bottomnav {
 			display: grid;
 			grid-template-columns: 2fr 8fr 2fr;
+			height: 2rem;
 		}
 
 		.bottom-left {
