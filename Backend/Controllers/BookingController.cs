@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BookingApplication.Exceptions;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
 using BookingApplication.Models.Dtos;
@@ -26,6 +27,10 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
 
             var booking = await bookingService.CreateFromRequestAsync(request);
             return Created(nameof(Book), new { Message = $"Created booking with Id {booking.Id}" });
+        }
+        catch (DateErrorException e)
+        {
+            return BadRequest($"An error with request dates have occured: {e.Message}");
         }
         catch (ArgumentException e)
         {
