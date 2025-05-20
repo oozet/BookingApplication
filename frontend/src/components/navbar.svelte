@@ -13,7 +13,7 @@
 	<div class="left-nav"></div>
 	<div class="middle-nav"><h1>Booking Application</h1></div>
 	<div class="right-nav">
-		<Hamburger bind:open title="Toogle a menu with navigation" --color="white" type="minus" />
+		<Hamburger bind:open title="Toogle a menu with navigation" --color="#6bbaecff" type="minus" />
 	</div>
 </nav>
 {#if open}
@@ -28,7 +28,7 @@
 	nav {
 		display: grid;
 		grid-template-columns: 2fr 8fr 2fr;
-		background-color: darkgray;
+		background-color: #7880b5ff;
 		width: 100vw;
 		height: 4rem;
 		gap: 0.5rem;
@@ -41,7 +41,7 @@
 		justify-content: center;
 	}
 	.middle-nav > h1 {
-		color: white;
+		color: #6bbaecff;
 	}
 	.right-nav {
 		display: flex;
@@ -51,7 +51,7 @@
 
 	.hamburger-dropdown {
 		height: 40vh;
-		background-color: darkgray;
+		background-color: #7880b5ff;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
