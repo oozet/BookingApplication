@@ -1,81 +1,65 @@
 <script lang="ts">
+	import { Hamburger } from 'svelte-hamburgers';
+	import { slide } from 'svelte/transition';
+
+	let open = $state(false);
 </script>
 
-<nav class="nav-bar">
-	<div class="topnav">
-		<h1 class="title">Booking Application</h1>
-	</div>
-	<div class="bottomnav">
-		<div class="bottom-left">
-			<a href="/">Home</a><a href="/about">About</a><a href="/booking">Booking</a>
-		</div>
-		<div class="bottom-middle"></div>
-		<div class="bottom-right"></div>
+<nav>
+	<div class="left-nav"></div>
+	<div class="middle-nav"><h1>Booking Application</h1></div>
+	<div class="right-nav">
+		<Hamburger bind:open title="Toogle a menu with navigation" --color="white" type="minus" />
 	</div>
 </nav>
+{#if open}
+	<div class="hamburger-dropdown" transition:slide>
+		<h3><a href="/">Home</a></h3>
+		<h3><a href="/about">About</a></h3>
+		<h3><a href="/booking">Booking</a></h3>
+	</div>
+{/if}
 
 <style>
-	.nav-bar {
-		background-color: gray;
-		width: 100%;
-		margin: 0;
-	}
-
-	.nav-bar {
-		color: white;
-	}
-
-	.topnav {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-		height: 4rem;
-		margin-top: 0.5rem;
-	}
-
-	.title {
-		color: white;
-	}
-
-	nav a,
-	nav a:visited {
-		color: white;
-		text-decoration: none;
-	}
-
-	nav a:hover {
-		color: orange;
-	}
-
-	.bottomnav {
-		display: none;
-	}
-
-	.bottomnav {
+	nav {
 		display: grid;
 		grid-template-columns: 2fr 8fr 2fr;
-		height: 2rem;
+		background-color: skyblue;
+		width: 100vw;
+		height: 4rem;
+		gap: 0.5rem;
+		flex-shrink: 0;
 	}
 
-	.bottom-left {
+	.middle-nav {
 		display: flex;
-		gap: 1rem;
-		justify-content: flex-start;
 		align-items: center;
-		margin-left: 1rem;
+		justify-content: center;
+	}
+	.middle-nav > h1 {
+		color: white;
+	}
+	.right-nav {
+		display: flex;
+		justify-content: end;
+		align-items: center;
 	}
 
-	.bottom-middle {
+	.hamburger-dropdown {
+		height: 40vh;
+		background-color: skyblue;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
 
-	.bottom-right {
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-		margin-right: 1rem;
+	.hamburger-dropdown h3 {
+		margin: 0.5rem;
+	}
+
+	.hamburger-dropdown a {
+		text-decoration: none;
+		color: white;
 	}
 </style>

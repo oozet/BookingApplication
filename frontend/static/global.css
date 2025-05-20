@@ -1,11 +1,19 @@
 body {
     margin: 0;
+    background-color: rgb(255, 255, 255);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: "JetBrains Mono";
+}
+
+main {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: rgb(245, 245, 240);
-    font-family: 'JetBrains Mono';
+    flex: 1;
 }
 
 @font-face {
