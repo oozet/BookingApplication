@@ -3,6 +3,10 @@
 	import { slide } from 'svelte/transition';
 
 	let open = $state(false);
+
+	function changeOpenState() {
+		open = !open;
+	}
 </script>
 
 <nav>
@@ -14,9 +18,9 @@
 </nav>
 {#if open}
 	<div class="hamburger-dropdown" transition:slide>
-		<h3><a href="/">Home</a></h3>
-		<h3><a href="/about">About</a></h3>
-		<h3><a href="/booking">Booking</a></h3>
+		<h3><a href="/" onclick={changeOpenState}>Home</a></h3>
+		<h3><a href="/about" onclick={changeOpenState}>About</a></h3>
+		<h3><a href="/booking" onclick={changeOpenState}>Booking</a></h3>
 	</div>
 {/if}
 
