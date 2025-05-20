@@ -6,6 +6,11 @@ public class SignInUserRequest : IRequest
     public required string Password { get; set; }
 }
 
+public class SignInUserResponse : IRequest
+{
+    public required string Username { get; set; }
+}
+
 public class RegisterUserRequest : IRequest
 {
     public required string Username { get; set; }

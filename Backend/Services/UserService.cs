@@ -12,7 +12,7 @@ namespace BookingApplication.Services;
 
 public interface IUserService : IService<User, RegisterUserRequest, EditUserRequest>
 {
-    public Task LoginAsync(SignInUserRequest request);
+    public Task<SignInUserResponse> LoginAsync(SignInUserRequest request);
 
     // id, username
     //public Task<Dictionary<string, string>> GetAllAsync();
@@ -68,9 +68,13 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new IdentityException($"Unable to delete {user.UserName}");
     }
 
-    public Task DeleteAsync(User entityToRemove)
+    public async Task DeleteAsync(User entityToRemove)
     {
-        throw new NotImplementedException();
+        var result = await userManager.DeleteAsync(entityToRemove);
+        if (result.Succeeded)
+            return;
+
+        throw new IdentityException($"Unable to delete {entityToRemove.UserName}");
     }
 
     public Task<User?> DeleteAsync(Guid entityId)
@@ -117,9 +121,9 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
         throw new NotImplementedException();
     }
 
-    public async Task LoginAsync(SignInUserRequest request)
+    public async Task<SignInUserResponse> LoginAsync(SignInUserRequest request)
     {
-        _ =
+        var user =
             await userManager.FindByNameAsync(request.Username)
             ?? throw new IdentityException("Invalid username");
 
@@ -130,11 +134,15 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
             false
         );
 
-        if (!result.Succeeded)
+        if (result.Succeeded)
         {
-            throw new IdentityException($"Invalid username or password");
+            return new SignInUserResponse { Username = user.UserName! };
         }
+        throw new IdentityException($"Invalid username or password");
+    }
 
-        return;
+    Task IService<User, RegisterUserRequest, EditUserRequest>.DeleteAsync(Guid entityId)
+    {
+        return DeleteAsync(entityId);
     }
 }

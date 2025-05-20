@@ -44,17 +44,17 @@ public class UserController : ControllerBase
     {
         try
         {
-            await userService.LoginAsync(request);
+            var response = await userService.LoginAsync(request);
 
-            return Ok();
+            return Ok(response);
         }
         catch (ArgumentNullException)
         {
-            return BadRequest("User not found");
+            return BadRequest(new { errors = "User not found" });
         }
         catch (IdentityException ex)
         {
-            return Unauthorized(ex.Message);
+            return Unauthorized(new { errors = ex.Message });
         }
         catch
         {
@@ -71,7 +71,7 @@ public class UserController : ControllerBase
             var userId =
                 User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new Exception("Cannot retrieve user id.");
-            request.Id = userId;
+            request.Id = Guid.Parse(userId);
 
             var updatedUser = await userService.EditFromRequestAsync(request);
 
