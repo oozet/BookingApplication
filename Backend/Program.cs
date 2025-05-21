@@ -1,5 +1,7 @@
 using BookingApplication.Data;
+using BookingApplication.Interfaces;
 using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
 using BookingApplication.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,8 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<RoomService>();
+        builder.Services.AddScoped(typeof(IRepository<Room>), typeof(RoomRepository));
 
         // builder
         //     .Services.AddIdentityCore<User>()

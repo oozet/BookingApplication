@@ -17,7 +17,7 @@ public class RoomController : ControllerBase
     }
 
     [Authorize(Roles ="Admin")]
-    [HttpPost("")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoomRequest request)
     {
         try
@@ -83,7 +83,6 @@ public class RoomController : ControllerBase
         }
     }
 
-    [Authorize(Roles ="Admin")]
     [HttpGet("{roomId}")] // 
     public async Task<IActionResult> Get(Guid roomId)
     {
