@@ -22,10 +22,6 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
         {
             throw new ArgumentException("A room must be linked to the booking");
         }
-        if (string.IsNullOrWhiteSpace(request.UserId))
-        {
-            throw new ArgumentException("A user must be linked to the booking");
-        }
 
         var booking = new Booking
         {
