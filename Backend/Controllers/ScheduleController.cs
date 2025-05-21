@@ -21,7 +21,7 @@ public class ScheduleController : ControllerBase
     {
         try
         {
-            // var rooms = roomService.GetRoomsFromSpan();
+            // var rooms = roomService.GetRoomsFromSpan(startDate, endDate);
             // return Ok(rooms);
 
             return Ok();
