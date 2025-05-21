@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 [Route("schedule")]
 public class ScheduleController : ControllerBase
 {
-    private readonly RoomService roomService;
+    private readonly ScheduleService scheduleService;
 
-    public ScheduleController(RoomService roomService)
+    public ScheduleController(ScheduleService scheduleService)
     {
-        this.roomService = roomService;
+        this.scheduleService = scheduleService;
     }
 
     [HttpGet]
@@ -21,10 +21,8 @@ public class ScheduleController : ControllerBase
     {
         try
         {
-            // var rooms = roomService.GetRoomsFromSpan(startDate, endDate);
-            // return Ok(rooms);
-
-            return Ok();
+            var bookings = scheduleService.GetScheduleAsync(startDate, endDate);
+            return Ok(bookings);
         }
         catch (System.Exception)
         {
