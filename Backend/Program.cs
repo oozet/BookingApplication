@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
+
+
 namespace BookingApplication;
 
 public class Program
@@ -52,6 +59,9 @@ public class Program
             );
         });
 
+
+        builder.Services.AddOpenApi();
+
         var app = builder.Build();
 
         app.MapControllers();
@@ -66,6 +76,12 @@ public class Program
 
         await CreateDefaultRoles(app);
         await CreateAdminAccount(app);
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference();
+        }
 
         app.Run();
     }
