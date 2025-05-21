@@ -27,7 +27,7 @@ public class ScheduleController : ControllerBase
                 (startDate, endDate) = DateTime.Today.GetCurrentWeek();
             }
 
-            var bookings = scheduleService.GetScheduleAsync(startDate ?? throw new DateErrorException("Error while converting a nullable DateTime startDate to non nullable"),
+            var bookings = await scheduleService.GetScheduleAsync(startDate ?? throw new DateErrorException("Error while converting a nullable DateTime startDate to non nullable"),
             endDate ?? throw new DateErrorException("Error while converting a nullable DateTime endDate to non nullable"));
             return Ok(bookings);
         }
