@@ -22,7 +22,7 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
         {
             throw new ArgumentException("A room must be linked to the booking");
         }
-        if (string.IsNullOrWhiteSpace(request.UserId))
+        if (request.UserId == Guid.Empty)
         {
             throw new ArgumentException("A user must be linked to the booking");
         }
@@ -32,7 +32,6 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
             Id = Guid.NewGuid(),
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Price = 0, // Fix price calc
             RoomId = request.RoomId,
             UserId = request.UserId,
             ActivityId = request.ActivityId,
@@ -56,7 +55,6 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
             UserId = request.UserId,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Price = 0,
             ActivityId = request.ActivityId
         };
 
