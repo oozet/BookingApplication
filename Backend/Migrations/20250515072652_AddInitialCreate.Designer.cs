@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookingApplication.Migrations
 {
     [DbContext(typeof(BookingAppContext))]
-    [Migration("20250507091944_addAdressToUser")]
-    partial class addAdressToUser
+    [Migration("20250515072652_AddInitialCreate")]
+    partial class AddInitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

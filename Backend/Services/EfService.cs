@@ -35,7 +35,8 @@ public abstract class EfService<T, TAddRequest, TEditRequest> : IService<T, TAdd
 
     public async Task DeleteAsync(T entityToRemove)
     {
-        await repository.DeleteAsync(entityToRemove);
+        await repository.DeleteAsync(entityToRemove.ToString());
+        //await repository.DeleteAsync(entityToRemove);
     }
 
     public async Task<T?> DeleteAsync(Guid entityId) 
@@ -47,7 +48,7 @@ public abstract class EfService<T, TAddRequest, TEditRequest> : IService<T, TAdd
             return null;
         }
 
-        await repository.DeleteAsync(entity);
+        await repository.DeleteAsync(entity.ToString()!);
         return entity;
     }
 
