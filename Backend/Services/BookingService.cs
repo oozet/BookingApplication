@@ -2,46 +2,33 @@ using BookingApplication.Controllers;
 using BookingApplication.Data;
 using BookingApplication.Interfaces;
 using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
 using BookingApplication.Repositories;
+using BookingApplication.Exceptions;
 
 namespace BookingApplication.Services;
 
 public class BookingService : EfService<Booking, CreateBookingRequest, EditBookingRequest>
 {
-    public BookingService(IRepository<Booking> repository) : base(repository) {}
+    public BookingService(BookingRepository repository) : base(repository) { }
 
     public override async Task<Booking> CreateFromRequestAsync(CreateBookingRequest request)
     {
-        if(request.StartDate < DateTime.Now || request.EndDate < DateTime.Now)
+        if (request.StartDate < DateTime.Now || request.EndDate < DateTime.Now)
         {
-            throw new Exception("Booking dates can't be in the past");
+            throw new DateErrorException("Booking dates can't be in the past");
         }
-        if(request.RoomId == Guid.Empty)
+        if (request.RoomId == Guid.Empty)
         {
-            throw new Exception("A room must be linked to the booking");
+            throw new ArgumentException("A room must be linked to the booking");
         }
-        if(string.IsNullOrWhiteSpace(request.UserId))
-        {
-            throw new Exception("A user must be linked to the booking");
-        }
-        if(request.Price < 0)
-        {
-            throw new Exception("Price can't be negative");
-        }
-
-        /* 
-        Should booking service have a dependency to roomRepository or is the price calculation done elsewhere?
-
-        var room = roomRepository.GetByIdAsync(request.RoomId);
-        var price = room.Price * (request.EndDate - request.StartDate).Days;
-        */
 
         var booking = new Booking
         {
-            Id = new Guid(), // ?
+            Id = Guid.NewGuid(),
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Price = request.Price,
+            Price = 0, // Fix price calc
             RoomId = request.RoomId,
             UserId = request.UserId,
             ActivityId = request.ActivityId,
@@ -53,11 +40,32 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
 
     public override async Task<Booking> EditFromRequestAsync(EditBookingRequest request)
     {
-        throw new NotImplementedException();
+        if (request.StartDate < DateTime.Now || request.EndDate < DateTime.Now)
+        {
+            throw new DateErrorException("Booking dates can't be in the past");
+        }
+
+        var booking = new Booking
+        {
+            Id = request.Id,
+            RoomId = request.RoomId,
+            UserId = request.UserId,
+            StartDate = request.StartDate,
+            EndDate = request.EndDate,
+            Price = 0,
+            ActivityId = request.ActivityId
+        };
+
+        await repository.EditAsync(booking);
+        return booking;
     }
 
-    public async Task<List<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
+    public Task CancelById(Guid bookingId)
     {
-        throw new NotImplementedException();
+        throw new Exception("Function not implemented.");
     }
+    /*public async Task<List<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
+    {
+        return (List<Booking>)await ((BookingRepository)repository).GetByTimeSpanAsync(start, end);
+    }*/
 }

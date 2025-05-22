@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingApplication.Repositories
 {
-   public class BookingRepository : EfRepository<Booking>
+    public class BookingRepository : EfRepository<Booking>
     {
         public BookingRepository(BookingAppContext context) : base(context)
         {
         }
 
-        public override async Task<Booking> GetByIdAsync(Guid id)
+        public override async Task<Booking?> GetByIdAsync(Guid id)
         {
             return await _context.Bookings
                 .Include(b => b.User)
@@ -37,11 +37,10 @@ namespace BookingApplication.Repositories
         public async Task<IEnumerable<Booking>> GetBookingsByUserAsync(Guid userId)
         {
             return await _context.Bookings
-                .Where(b => b.UserId == userId.ToString())
+                .Where(b => b.UserId == userId)
                 .Include(b => b.Room)
                 .Include(b => b.Activity)
                 .ToListAsync();
         }
     }
 }
-

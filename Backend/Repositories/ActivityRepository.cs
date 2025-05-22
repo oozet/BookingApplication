@@ -20,7 +20,7 @@ namespace BookingApplication.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Activity>> GetActivitiesByUserIdAsync(string userId)
+        public async Task<IEnumerable<Activity>> GetActivitiesByUserIdAsync(Guid userId)
         {
             return await _context.Activities
                 .Where(a => a.Bookings.Any(b => b.UserId == userId))

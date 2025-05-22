@@ -1,0 +1,34 @@
+using BookingApplication.Interfaces;
+using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
+using BookingApplication.Repositories;
+using System.Linq;
+
+namespace BookingApplication.Services;
+
+public class ScheduleService
+{
+    private readonly BookingRepository bookingRepository;
+
+    public ScheduleService(BookingRepository bookingRepository)
+    {
+        this.bookingRepository = bookingRepository;
+    }
+
+    public async Task<List<Booking>> GetScheduleAsync(DateTime? start, DateTime? end)
+    {
+        if (start == null || end == null)
+        {
+            (start, end) = DateTime.Today.GetCurrentWeek();
+        }
+
+        var bookings = await bookingRepository.GetAllAsync();
+        return bookings.Where(b => b.StartDate >= start && b.EndDate <= end).OrderBy(b => b.StartDate).ToList();
+    }
+}
+
+
+public class ScheduleResponse
+{
+
+}

@@ -17,7 +17,7 @@ public class ActivityService : EfService<Activity, CreateActivityRequest, EditAc
 
         var activity = new Activity
         {
-            Id = new Guid(), // ?
+            Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
         };
@@ -28,10 +28,6 @@ public class ActivityService : EfService<Activity, CreateActivityRequest, EditAc
 
     public override async Task<Activity> EditFromRequestAsync(EditActivityRequest request)
     {
-        if(request.Id == Guid.Empty)
-        {
-            throw new Exception("The activity ID can't be empty");
-        }
         if(string.IsNullOrWhiteSpace(request.Name))
         {
             throw new Exception("Activity must have a name");
