@@ -8,10 +8,8 @@ using BookingApplication.Exceptions;
 
 namespace BookingApplication.Services;
 
-public class BookingService : EfService<Booking, CreateBookingRequest, EditBookingRequest>
+public class BookingService(IRepository<Booking> repository) : EfService<Booking, CreateBookingRequest, EditBookingRequest>(repository)
 {
-    public BookingService(BookingRepository repository) : base(repository) { }
-
     public override async Task<Booking> CreateFromRequestAsync(CreateBookingRequest request)
     {
         if (request.StartDate < DateTime.Now || request.EndDate < DateTime.Now)
