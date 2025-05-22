@@ -15,13 +15,8 @@ public class ScheduleService
         this.bookingRepository = bookingRepository;
     }
 
-    public async Task<List<Booking>> GetScheduleAsync(DateTime? start, DateTime? end)
+    public async Task<List<Booking>> GetScheduleAsync(DateTime start, DateTime end)
     {
-        if (start == null || end == null)
-        {
-            (start, end) = DateTime.Today.GetCurrentWeek();
-        }
-
         var bookings = await bookingRepository.GetAllAsync();
         return bookings.Where(b => b.StartDate >= start && b.EndDate <= end).OrderBy(b => b.StartDate).ToList();
     }
