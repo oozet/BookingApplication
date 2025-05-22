@@ -37,7 +37,7 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<RoomService>();
         builder.Services.AddScoped<IRepository<Room>, RoomRepository>();
-        builder.Services.AddScoped<EfService<Booking, CreateBookingRequest, EditBookingRequest>, BookingService>();
+        builder.Services.AddScoped<IService<Booking, CreateBookingRequest, EditBookingRequest>, BookingService>();
         builder.Services.AddScoped<IRepository<Booking>, BookingRepository>();
 
         // builder
