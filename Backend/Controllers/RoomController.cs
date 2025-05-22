@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingApplication.Controllers;
 
 [ApiController]
-[Route("")]
+[Route("room")]
 public class RoomController : ControllerBase 
 {
     private readonly RoomService roomService;
@@ -17,7 +17,7 @@ public class RoomController : ControllerBase
     }
 
     [Authorize(Roles ="Admin")]
-    [HttpPost("")]
+    [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoomRequest request)
     {
         try
@@ -28,6 +28,10 @@ public class RoomController : ControllerBase
                 return BadRequest("Invalid request");
                 
             return Ok(room);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest($"The request could not be processed: {e.Message}");
         }
         catch
         {
@@ -48,6 +52,10 @@ public class RoomController : ControllerBase
 
             room = await roomService.EditFromRequestAsync(request);
             return Ok(room);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest($"The request could not be processed: {e.Message}");
         }
         catch
         {
@@ -75,7 +83,6 @@ public class RoomController : ControllerBase
         }
     }
 
-    [Authorize(Roles ="Admin")]
     [HttpGet("{roomId}")] // 
     public async Task<IActionResult> Get(Guid roomId)
     {
