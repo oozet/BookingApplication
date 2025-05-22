@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+using BookingApplication.Repositories;
 
 
 namespace BookingApplication;
@@ -35,7 +36,9 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<RoomService>();
-        builder.Services.AddScoped(typeof(IRepository<Room>), typeof(RoomRepository));
+        builder.Services.AddScoped<IRepository<Room>, RoomRepository>();
+        builder.Services.AddScoped<EfService<Booking, CreateBookingRequest, EditBookingRequest>, BookingService>();
+        builder.Services.AddScoped<IRepository<Booking>, BookingRepository>();
 
         // builder
         //     .Services.AddIdentityCore<User>()

@@ -21,7 +21,7 @@ public class ScheduleController : ControllerBase
     {
         try
         {
-            var bookings = scheduleService.GetScheduleAsync(startDate, endDate);
+            var bookings = await scheduleService.GetScheduleAsync(startDate, endDate);
             return Ok(bookings);
         }
         catch (System.Exception)
