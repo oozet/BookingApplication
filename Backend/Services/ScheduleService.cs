@@ -8,9 +8,9 @@ namespace BookingApplication.Services;
 
 public class ScheduleService
 {
-    private readonly BookingRepository bookingRepository;
+    private readonly IRepository<Booking> bookingRepository;
 
-    public ScheduleService(BookingRepository bookingRepository)
+    public ScheduleService(IRepository<Booking> bookingRepository)
     {
         this.bookingRepository = bookingRepository;
     }
