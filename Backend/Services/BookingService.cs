@@ -62,12 +62,4 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
         return booking;
     }
 
-    public Task CancelById(Guid bookingId)
-    {
-        throw new Exception("Function not implemented.");
-    }
-    /*public async Task<List<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
-    {
-        return (List<Booking>)await ((BookingRepository)repository).GetByTimeSpanAsync(start, end);
-    }*/
 }
