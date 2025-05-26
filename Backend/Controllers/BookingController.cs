@@ -86,8 +86,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
         }
     }
 
-    [Authorize]
-    [HttpDelete("/room/{roomId}")]
+    [HttpGet("/room/{roomId}")]
     public async Task<IActionResult> GetAllBookingsForRoom(Guid roomId)
     {
         try
