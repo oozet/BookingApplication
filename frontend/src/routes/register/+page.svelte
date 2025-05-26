@@ -1,22 +1,21 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { login, authStore } from '../../stores/authStore'; // A store to track login state
+    import { register, authStore } from '../../stores/authStore'; // A store to track login state
 
     
     let user: any;
     $: authStore.subscribe(value => user = value);
 
     let username = '';
+    let email = '';
     let password = '';
     let errorMessage = '';
 
-    // login(username, password);
-
-    async function handleLogin() {
+    async function handleRegister() {
         errorMessage = '';
 
         try {
-            login(username, password);
+            register(username, email, password);
         } catch (error: any) {
             errorMessage = error.message;
         }
@@ -24,10 +23,15 @@
 </script>
 
 {#if !user}
-<form on:submit|preventDefault={handleLogin}>
+<form on:submit|preventDefault={handleRegister}>
     <label>
         Username:
         <input type="text" bind:value={username} required />
+    </label>
+
+    <label>
+        Email:
+        <input type="email" bind:value={email} required />
     </label>
 
     <label>
@@ -39,7 +43,7 @@
         <p class="error">{errorMessage}</p>
     {/if}
 
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
 </form>
 
 {:else}
