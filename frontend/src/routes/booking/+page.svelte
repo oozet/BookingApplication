@@ -1,8 +1,8 @@
 <script lang="ts">
 import CreateBooking from '../../components/createbooking.svelte';
-import { authStore } from '../../stores/authStore';
+import { userStore } from '../../api/user';
     let user: any;
-    $: authStore.subscribe(value => user = value);
+    $: userStore.subscribe(value => user = value);
 </script>
 
 {#if !user}

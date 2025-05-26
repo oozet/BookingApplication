@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export const authStore = writable(null); // Stores user session info
+export const userStore = writable(null); // Stores user session info
 
 export async function login(username: string, password: string) {
     const response = await fetch('http://localhost:5133/user/login', {
@@ -12,7 +12,7 @@ export async function login(username: string, password: string) {
     if (response.ok) {
         const data = await response.json();
         console.log(data);
-        authStore.set(data); // Store user session
+        userStore.set(data); // Store user session
     }
 }
 

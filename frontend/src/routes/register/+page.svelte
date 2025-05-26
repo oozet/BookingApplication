@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { register, authStore } from '../../stores/authStore'; // A store to track login state
+    import { register, userStore } from '../../api/user'; // A store to track login state
 
     
     let user: any;
-    $: authStore.subscribe(value => user = value);
+    $: userStore.subscribe(value => user = value);
 
     let username = '';
     let email = '';
