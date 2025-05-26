@@ -1,5 +1,7 @@
 using BookingApplication.Data;
+using BookingApplication.Interfaces;
 using BookingApplication.Models;
+using BookingApplication.Models.Dtos;
 using BookingApplication.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+using BookingApplication.Repositories;
 
 
 namespace BookingApplication;
@@ -32,6 +35,13 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<RoomService>();
+        builder.Services.AddScoped<IRepository<Room>, RoomRepository>();
+        builder.Services.AddScoped<IService<Booking, CreateBookingRequest, EditBookingRequest>, BookingService>();
+        builder.Services.AddScoped<IRepository<Booking>, BookingRepository>();
+        builder.Services.AddScoped<ScheduleService>();
+        builder.Services.AddScoped<ActivityService>();
+        builder.Services.AddScoped<IRepository<Activity>, ActivityRepository>();
 
         // builder
         //     .Services.AddIdentityCore<User>()

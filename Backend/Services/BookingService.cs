@@ -8,10 +8,8 @@ using BookingApplication.Exceptions;
 
 namespace BookingApplication.Services;
 
-public class BookingService : EfService<Booking, CreateBookingRequest, EditBookingRequest>
+public class BookingService(IRepository<Booking> repository) : EfService<Booking, CreateBookingRequest, EditBookingRequest>(repository)
 {
-    public BookingService(BookingRepository repository) : base(repository) { }
-
     public override async Task<Booking> CreateFromRequestAsync(CreateBookingRequest request)
     {
         if (request.StartDate < DateTime.Now || request.EndDate < DateTime.Now)
@@ -22,13 +20,16 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
         {
             throw new ArgumentException("A room must be linked to the booking");
         }
+        if (request.UserId == Guid.Empty)
+        {
+            throw new ArgumentException("A user must be linked to the booking");
+        }
 
         var booking = new Booking
         {
             Id = Guid.NewGuid(),
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Price = 0, // Fix price calc
             RoomId = request.RoomId,
             UserId = request.UserId,
             ActivityId = request.ActivityId,
@@ -52,7 +53,6 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
             UserId = request.UserId,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Price = 0,
             ActivityId = request.ActivityId
         };
 
@@ -60,12 +60,4 @@ public class BookingService : EfService<Booking, CreateBookingRequest, EditBooki
         return booking;
     }
 
-    public Task CancelById(Guid bookingId)
-    {
-        throw new Exception("Function not implemented.");
-    }
-    /*public async Task<List<Booking>> GetByTimeSpanAsync(DateTime start, DateTime end)
-    {
-        return (List<Booking>)await ((BookingRepository)repository).GetByTimeSpanAsync(start, end);
-    }*/
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/[Controller]")]
+[Route("api/activity")]
 public class ActivityController : ControllerBase
 {
     private readonly ActivityService _activityService;
@@ -20,9 +20,7 @@ public class ActivityController : ControllerBase
         try
         {
             var activity = await _activityService.CreateFromRequestAsync(request);
-            // return CreatedAtAction(nameof(Get), new { activityId = activity.Id} , activity );
-            //return Created($"/activity/{activity.Id}", activity);
-           return CreatedAtAction(nameof(Get), "Activity", new { activityId = activity.Id }, activity);
+            return CreatedAtAction(nameof(Get), new { activityId = activity.Id }, activity);
         }
         catch (Exception ex)
         {
@@ -62,6 +60,27 @@ public class ActivityController : ControllerBase
             {
                 return BadRequest(new { error = ex.Message });
             }
+    }
+
+    [HttpGet("")]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        try
+        {
+            var activities = await _activityService.GetAllAsync();
+
+
+            if (activities == null)
+            {
+                return NotFound(new { error = $" The List of activities is empty" });
+            }
+
+            return Ok(activities);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpGet("{activityId}")] //
