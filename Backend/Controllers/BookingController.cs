@@ -14,6 +14,20 @@ namespace BookingApplication.Controllers;
 [Route("booking")]
 public class BookingController(IService<Booking, CreateBookingRequest, EditBookingRequest> bookingService) : ControllerBase
 {
+
+    [HttpGet("{bookingId}")]
+    public async Task<IActionResult> GetBooking(Guid bookingId)
+    {
+        try
+        {
+            return Ok(await bookingService.GetByIdAsync(bookingId));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e);
+        }
+    }
+
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> Book([FromBody] CreateBookingRequest request)
