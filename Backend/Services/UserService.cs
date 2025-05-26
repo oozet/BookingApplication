@@ -90,17 +90,23 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
     public async Task<User> EditFromRequestAsync(EditUserRequest request)
     {
         // // Possible solution for updating User if nothing easier is found.
-        // var user =
-        //     await userManager.FindByIdAsync(request.Id)
-        //     ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
+        var user =
+            await userManager.FindByIdAsync(request.Id.ToString())
+            ?? throw new ArgumentNullException($"Unable to find user with id {request.Id}");
 
+        if (request.NewPassword != null)
+        {
+            await userManager.CheckPasswordAsync(user, request.Password ?? throw new IdentityException("Invalid password."));
+        }
+
+        user = EntityUpdaterHelper.UpdateEntity(user, request);
         // EntityUpdaterHelper.UpdateEntity<User>(user, request);
-
-        var user = new User { Id = request.Id, UserName = request.Username };
 
         var result = await userManager.UpdateAsync(user);
         if (result.Succeeded)
             return user;
+
+        Console.WriteLine("Update failed for user {0}. Errors: {1}", user.Id, string.Join(", ", result.Errors.Select(e => e.Description)));
 
         throw new IdentityException($"Unable to update {user.UserName}");
     }
@@ -136,7 +142,7 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
 
         if (result.Succeeded)
         {
-            return new SignInUserResponse { Username = user.UserName! };
+            return new SignInUserResponse { Id = user.Id, Username = user.UserName! };
         }
         throw new IdentityException($"Invalid username or password");
     }
