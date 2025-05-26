@@ -85,6 +85,24 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
             return BadRequest("An unspecified error has happened");
         }
     }
+
+    [Authorize]
+    [HttpDelete("/room/{roomId}")]
+    public async Task<IActionResult> GetAllBookingsForRoom(Guid roomId)
+    {
+        try
+        {
+            // sligtly more business logic then we want in a controller
+            // but changing the Iservice and IRepository just for this function
+            // this late in a project seems a bit over the top. So I did it this way.
+            var bookings = await bookingService.GetAllAsync();
+            return Ok(bookings.Where(b => b.RoomId == roomId));
+        }
+        catch (Exception)
+        {
+            return BadRequest("An unspecified error has happened");
+        }
+    }
 }
 
 
