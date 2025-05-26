@@ -15,6 +15,17 @@
 	// username and the room number/room name. But still know which Id
 	// they are connect to incase the user wants to press them and get sent to
 	// the appropiate page.
+
+	let user = {
+		Id: 'mock id for the user',
+		Name: 'Mock Mockson'
+	};
+
+	let room = {
+		Id: 'mock id for the room',
+		Number: 404,
+		Name: 'Made up'
+	};
 </script>
 
 <div class="booking-card">
