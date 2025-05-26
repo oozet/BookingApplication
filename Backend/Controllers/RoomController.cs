@@ -7,7 +7,7 @@ namespace BookingApplication.Controllers;
 
 [ApiController]
 [Route("room")]
-public class RoomController : ControllerBase 
+public class RoomController : ControllerBase
 {
     private readonly RoomService roomService;
 
@@ -16,7 +16,7 @@ public class RoomController : ControllerBase
         this.roomService = roomService;
     }
 
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoomRequest request)
     {
@@ -26,7 +26,7 @@ public class RoomController : ControllerBase
 
             if (room == null)
                 return BadRequest("Invalid request");
-                
+
             return Ok(room);
         }
         catch (ArgumentException e)
@@ -63,7 +63,7 @@ public class RoomController : ControllerBase
         }
     }
 
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{roomId}")]
     public async Task<IActionResult> Delete(Guid roomId)
     {
