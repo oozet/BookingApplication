@@ -20,11 +20,19 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
     {
         try
         {
-            return Ok(await bookingService.GetByIdAsync(bookingId));
+            var booking = await bookingService.GetByIdAsync(bookingId);
+
+            if (booking is null)
+            {
+                return NotFound("No booking was found with that id");
+            }
+
+            return Ok(BookingResponse.FromModel(booking));
+
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            return BadRequest(e);
+            return BadRequest();
         }
     }
 
