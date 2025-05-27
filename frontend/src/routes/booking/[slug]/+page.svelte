@@ -2,4 +2,4 @@
 	let { data } = $props();
 </script>
 
-Hello from bookkng/{data.slug}
+Hello from booking/{data.slug}
