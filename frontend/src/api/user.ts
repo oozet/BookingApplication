@@ -1,6 +1,10 @@
 import { writable } from 'svelte/store';
 
-export const userStore = writable(null); // Stores user session info
+export type User = {
+    id: number;
+    username: string;
+};
+export const userStore = writable<User | null>(null); // Stores user session info
 
 export async function login(username: string, password: string) {
     const response = await fetch('http://localhost:5133/user/login', {
@@ -11,6 +15,11 @@ export async function login(username: string, password: string) {
 
     if (response.ok) {
         const data = await response.json();
+        if (data?.id && data?.username) {
+            userStore.set({ id: data.id, username: data.username });
+        } else {
+            console.error("Invalid API response:", data);
+        }
         console.log(data);
         userStore.set(data); // Store user session
     }
