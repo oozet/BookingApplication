@@ -100,4 +100,22 @@ public class RoomController : ControllerBase
             return StatusCode(500, new { errors = "An unexpected error occured." });
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetRooms()
+    {
+        try
+        {
+            var rooms = await roomService.GetAllAsync();
+
+            if (!rooms.Any())
+                return NotFound();
+
+            return Ok(rooms);
+        }
+        catch
+        {
+            return StatusCode(500, new { errors = "An unexpected error occured." });
+        }
+    }
 }
