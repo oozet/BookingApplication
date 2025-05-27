@@ -77,8 +77,9 @@ public class UserController : ControllerBase
 
             return Ok();
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine(ex);
             return StatusCode(500, new { errors = "An unexpected error occured." });
         }
     }
