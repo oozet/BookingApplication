@@ -1,4 +1,5 @@
 <script lang="ts">
+	let { data } = $props();
 </script>
 
-Hello From the slug!
+Hello from bookkng/{data.slug}
