@@ -14,6 +14,28 @@ namespace BookingApplication.Controllers;
 [Route("booking")]
 public class BookingController(IService<Booking, CreateBookingRequest, EditBookingRequest> bookingService) : ControllerBase
 {
+
+    [HttpGet("{bookingId}")]
+    public async Task<IActionResult> GetBooking(Guid bookingId)
+    {
+        try
+        {
+            var booking = await bookingService.GetByIdAsync(bookingId);
+
+            if (booking is null)
+            {
+                return NotFound("No booking was found with that id");
+            }
+
+            return Ok(BookingResponse.FromModel(booking));
+
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
+    }
+
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> Book([FromBody] CreateBookingRequest request)
@@ -79,6 +101,23 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
             }
             await bookingService.DeleteAsync(bookingId);
             return Ok();
+        }
+        catch (Exception)
+        {
+            return BadRequest("An unspecified error has happened");
+        }
+    }
+
+    [HttpGet("/room/{roomId}")]
+    public async Task<IActionResult> GetAllBookingsForRoom(Guid roomId)
+    {
+        try
+        {
+            // sligtly more business logic then we want in a controller
+            // but changing the Iservice and IRepository just for this function
+            // this late in a project seems a bit over the top. So I did it this way.
+            var bookings = await bookingService.GetAllAsync();
+            return Ok(bookings.Where(b => b.RoomId == roomId));
         }
         catch (Exception)
         {

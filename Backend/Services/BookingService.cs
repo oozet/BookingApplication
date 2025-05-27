@@ -60,4 +60,10 @@ public class BookingService(IRepository<Booking> repository) : EfService<Booking
         return booking;
     }
 
+    public async Task<List<Booking>> GetBookingsPerRoom(Guid roomId)
+    {
+        var bookings = await repository.GetAllAsync();
+        return (List<Booking>)bookings.Where(b => b.RoomId == roomId);
+    }
+
 }
