@@ -6,9 +6,6 @@
 	// some mock data to send as a prop, for testing.
 	let booking = {
 		Id: 'mock Id for booking',
-		RoomId: 'mock id for the room',
-		UserId: 'mock id for the user',
-		ActivityId: 'Mock id for the activity',
 		StartDate: 'Add a date here',
 		EndDate: 'Add a date here as well'
 	};
@@ -26,7 +23,7 @@
 
 	let activity = {
 		Id: 'Mock id for the activity',
-		Name: 'Activity Name',
+		Name: 'Mock Activity Name',
 		Description: 'Activity description'
 	};
 </script>
