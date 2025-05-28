@@ -20,8 +20,9 @@ public class ScheduleController : ControllerBase
     {
         try
         {
-            var bookings = await scheduleService.GetScheduleAsync(request.startDate,
-request.endDate);
+            // DateTime startDate = DateTime.Parse(request.startDate);
+            // DateTime endDate = DateTime.Parse(request.endDate);
+            var bookings = await scheduleService.GetScheduleAsync(request.startDate, request.endDate);
             return Ok(bookings);
         }
         catch (DateErrorException ex)

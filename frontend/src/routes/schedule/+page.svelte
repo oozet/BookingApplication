@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fetchSchedule } from '../api/schedule';
+	import { fetchSchedule } from '../../api/schedule';
 
 	let scheduleData: any = null;
 	type WeekRange = { startDate: Date; endDate: Date };
@@ -27,15 +27,17 @@
 
 	async function updateSchedule() {
 		loading = true;
+		console.log('Startdate: ' + startDate);
+		console.log(endDate);
 		const { data, error: fetchError } = await fetchSchedule(startDate, endDate);
 		scheduleData = data;
 		error = fetchError;
 		loading = false;
 	}
 
-	$: if (startDate) {
-		updateSchedule();
-	}
+	// $: if (startDate) {
+	// 	updateSchedule();
+	// }
 
 	onMount(async () => {
 		updateSchedule();
