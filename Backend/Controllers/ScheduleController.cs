@@ -1,5 +1,6 @@
 using BookingApplication.Exceptions;
 using BookingApplication.Services;
+using BookingApplication.Models.Dtos;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,20 +16,12 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetSchedule(
-        [FromQuery] DateTime? startDate,
-        [FromQuery] DateTime? endDate
-    )
+    public async Task<IActionResult> GetSchedule([FromBody] ScheduleRequest request)
     {
         try
         {
-            if (startDate == null || endDate == null)
-            {
-                (startDate, endDate) = DateTime.Today.GetCurrentWeek();
-            }
-
-            var bookings = await scheduleService.GetScheduleAsync(startDate ?? throw new DateErrorException("Error while converting a nullable DateTime startDate to non nullable"),
-            endDate ?? throw new DateErrorException("Error while converting a nullable DateTime endDate to non nullable"));
+            var bookings = await scheduleService.GetScheduleAsync(request.startDate,
+request.endDate);
             return Ok(bookings);
         }
         catch (DateErrorException ex)
@@ -42,4 +35,33 @@ public class ScheduleController : ControllerBase
             return BadRequest("");
         }
     }
+
+    // [HttpGet]
+    // public async Task<IActionResult> GetSchedule(
+    //     [FromQuery] DateTime? startDate,
+    //     [FromQuery] DateTime? endDate
+    // )
+    // {
+    //     try
+    //     {
+    //         if (startDate == null || endDate == null)
+    //         {
+    //             (startDate, endDate) = DateTime.Today.GetCurrentWeek();
+    //         }
+
+    //         var bookings = await scheduleService.GetScheduleAsync(startDate ?? throw new DateErrorException("Error while converting a nullable DateTime startDate to non nullable"),
+    //         endDate ?? throw new DateErrorException("Error while converting a nullable DateTime endDate to non nullable"));
+    //         return Ok(bookings);
+    //     }
+    //     catch (DateErrorException ex)
+    //     {
+    //         // Logger not implemented
+    //         Console.WriteLine(ex.Message);
+    //         return StatusCode(500, "Unable to get bookings");
+    //     }
+    //     catch
+    //     {
+    //         return BadRequest("");
+    //     }
+    // }
 }
