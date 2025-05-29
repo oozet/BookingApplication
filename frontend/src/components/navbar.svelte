@@ -22,6 +22,7 @@
 		<h3><a href="/about" onclick={changeOpenState}>About</a></h3>
 		<h3><a href="/schedule" onclick={changeOpenState}>Schedule</a></h3>
 		<h3><a href="/booking" onclick={changeOpenState}>Booking</a></h3>
+		<h3><a href="/activities" onclick={changeOpenState}>Activities</a></h3>
 	</div>
 {/if}
 
