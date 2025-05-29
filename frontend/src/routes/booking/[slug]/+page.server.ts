@@ -21,12 +21,21 @@ export const load: PageServerLoad = async ({ params }) => {
         error(404, 'Room not found');
     }
     let roomBody = await room.json();
+
     // let user = await fetch();
+
+    let activity = await fetch(API_BASE_URL + "booking/" + bookBody.activityId);
+    let activityBody = {}
+
+    if (activity.ok) {
+        activityBody = await activity.json();
+    }
 
     return {
         slug: params.slug,
         booking: bookBody,
-        room: roomBody
+        room: roomBody,
+        activity: activityBody
     }
 
 };

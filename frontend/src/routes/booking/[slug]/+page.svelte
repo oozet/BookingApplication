@@ -25,13 +25,7 @@
 
 	let room = data.room;
 
-	let activity = {
-		Id: 'Mock id for the activity',
-		Name: 'Mock Activity Name',
-		Description: 'Activity description'
-	};
+	let activity = data.activity;
 </script>
-
-Hello from booking/{data.slug}
 
 <BookingCard {booking} {user} {room} {activity} />
