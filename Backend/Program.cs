@@ -40,6 +40,8 @@ public class Program
         builder.Services.AddScoped<IService<Booking, CreateBookingRequest, EditBookingRequest>, BookingService>();
         builder.Services.AddScoped<IRepository<Booking>, BookingRepository>();
         builder.Services.AddScoped<ScheduleService>();
+        builder.Services.AddScoped<ActivityService>();
+        builder.Services.AddScoped<IRepository<Activity>, ActivityRepository>();
 
         // builder
         //     .Services.AddIdentityCore<User>()
