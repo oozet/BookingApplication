@@ -9,6 +9,7 @@
 	// 	setWeekNumber(new Date());
 	// }
 	import type { PageData } from './$types'; // Automatically generated from `+page.ts`
+	import type { Booking } from '$lib/types';
 
 	export let data: PageData; // Access `week` and `year` from `load()`
 
@@ -19,6 +20,7 @@
 	let error: string | null = null;
 
 	let scheduleData: any = [];
+	let formattedBookings: Booking[];
 
 	if (week == -1 || year == -1) {
 		error = 'Error while parsing week/year.';
@@ -57,8 +59,19 @@
 		loading = true;
 		const { data, error: fetchError } = await fetchScheduleQuery(year, week);
 		scheduleData = data;
+		formattedBookings = scheduleData.map(convertToBooking);
 		error = fetchError;
 		loading = false;
+	}
+
+	function convertToBooking(rawData: any): Booking {
+		const startTime = new Date(rawData.startDate);
+
+		return {
+			day: startTime.getDay(), // Converts to 0 (Sunday) - 6 (Saturday)
+			hour: startTime.getHours(), // Extracts hour from 00:00 to 23:00
+			info: `Room: ${rawData.roomId}, User: ${rawData.userId}` // Customize as needed
+		};
 	}
 
 	onMount(async () => {
@@ -77,7 +90,7 @@
 		Week {week}
 		<button class="button" on:click={() => changeWeek(1)}>➡</button>
 	</div>
-	<ScheduleTable bookings={scheduleData} />
+	<ScheduleTable bookings={formattedBookings} />
 {/if}
 
 <style>

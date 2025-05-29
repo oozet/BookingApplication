@@ -1,13 +1,10 @@
 <script lang="ts">
+	import type { Booking } from '$lib/types';
 	import { onMount } from 'svelte';
 
-	type Booking = {
-		day: number; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-		hour: number; // 0 = 00:00, 1 = 01:00, ..., 23 = 23:00
-		info: string;
-	};
-
 	export let bookings: Booking[] = [];
+
+	console.log(bookings);
 
 	const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -46,13 +43,6 @@
 		display: grid;
 		grid-template-columns: 80px repeat(7, 1fr);
 		gap: 5px;
-	}
-	.button {
-		cursor: pointer;
-		background: #ddd;
-		border: none;
-		padding: 5px;
-		font-size: 14px;
 	}
 	.day-header {
 		font-weight: bold;
