@@ -8,14 +8,14 @@ import { API_BASE_URL } from '$lib/constants';
 
 
 export const load: PageServerLoad = async ({ params }) => {
-    let booking = await fetch(API_BASE_URL + "/booking/" + params.slug);
+    let booking = await fetch(API_BASE_URL + "booking/" + params.slug);
 
     if (!booking.ok) {
         error(404, 'Booking not found');
     }
 
     let bookBody = await booking.json();
-    let room = await fetch(API_BASE_URL + "/room/" + bookBody.RoomId);
+    let room = await fetch(API_BASE_URL + "room/" + bookBody.roomId);
 
     if (!room.ok) {
         error(404, 'Room not found');

@@ -32,19 +32,19 @@ public class ActivityController : ControllerBase
     [HttpPut("{activityId}")]
     public async Task<IActionResult> Update(Guid activityId, [FromBody] EditActivityRequest request)
     {
-       try
-       {
-        if (activityId != request.Id)
+        try
         {
-            return BadRequest(new { error = "Activity Id in URL must match the Id in the request body!"});
+            if (activityId != request.Id)
+            {
+                return BadRequest(new { error = "Activity Id in URL must match the Id in the request body!" });
+            }
+            var activity = await _activityService.EditFromRequestAsync(request);
+            return Ok(activity);
         }
-        var activity = await _activityService.EditFromRequestAsync(request);
-        return Ok(activity);
-       }
-       catch (Exception ex)
-       {
-        return BadRequest(new { error = ex.Message});
-       }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [Authorize(Roles = "Admin")]
@@ -52,14 +52,14 @@ public class ActivityController : ControllerBase
     public async Task<IActionResult> Delete(Guid activityId)
     {
         try
-            {
-                await _activityService.DeleteAsync(activityId);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
+        {
+            await _activityService.DeleteAsync(activityId);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpGet("")]
@@ -89,16 +89,16 @@ public class ActivityController : ControllerBase
         try
         {
             var activity = await _activityService.GetByIdAsync(activityId);
-            
+
             if (activity == null)
             {
-                return NotFound(new { error = $"Activity with ID {activityId} not found"});
+                return NotFound(new { error = $"Activity with ID {activityId} not found" });
             }
             return Ok(activity);
         }
         catch (Exception ex)
         {
-            return BadRequest(new { error = ex.Message});
+            return BadRequest(new { error = ex.Message });
         }
     }
 }

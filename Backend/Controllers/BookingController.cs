@@ -108,7 +108,7 @@ public class BookingController(IService<Booking, CreateBookingRequest, EditBooki
         }
     }
 
-    [HttpGet("/room/{roomId}")]
+    [HttpGet("/rooms/{roomId}")]
     public async Task<IActionResult> GetAllBookingsForRoom(Guid roomId)
     {
         try
