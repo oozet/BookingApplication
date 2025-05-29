@@ -21,7 +21,7 @@
 		{/if}
 	</p>
 
-	<p><strong>Booker:</strong> {user.Name}</p>
+	<p><strong>Booker:</strong> {user.userName}</p>
 
 	<p><strong>Start:</strong>{startDate}</p>
 	<p><strong>End:</strong>{endDate}</p>

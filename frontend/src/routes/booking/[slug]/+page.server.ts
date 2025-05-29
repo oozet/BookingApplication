@@ -22,7 +22,13 @@ export const load: PageServerLoad = async ({ params }) => {
     }
     let roomBody = await room.json();
 
-    // let user = await fetch();
+    let user = await fetch(API_BASE_URL + "user/" + bookBody.userId);
+
+    if (!user.ok) {
+        error(404, 'No user was found, contact an admin if you want to book this timeslot.');
+    }
+
+    let userBody = await user.json()
 
     let activity = await fetch(API_BASE_URL + "booking/" + bookBody.activityId);
     let activityBody = {}
@@ -35,7 +41,8 @@ export const load: PageServerLoad = async ({ params }) => {
         slug: params.slug,
         booking: bookBody,
         room: roomBody,
-        activity: activityBody
+        activity: activityBody,
+        user: userBody
     }
 
 };
