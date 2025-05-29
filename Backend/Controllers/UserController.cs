@@ -5,6 +5,7 @@ using BookingApplication.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.ObjectPool;
 
 namespace BookingApplication.Controllers;
 
@@ -113,6 +114,29 @@ public class UserController : ControllerBase
         catch
         {
             return BadRequest($"Unable to delete user with id: {id}");
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPublicUserInfo(string id)
+    {
+        try
+        {
+            var user = await userService.GetByIdAsync(id);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new
+            {
+                user.UserName
+            });
+        }
+        catch
+        {
+            return BadRequest();
         }
     }
 }
