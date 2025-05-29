@@ -62,7 +62,7 @@ public class ActivityController : ControllerBase
         }
     }
 
-    [HttpGet("")]
+    [HttpGet("getAll")]
     public async Task<IActionResult> GetAllAsync()
     {
         try
