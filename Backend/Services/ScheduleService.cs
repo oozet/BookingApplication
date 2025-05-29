@@ -21,9 +21,3 @@ public class ScheduleService
         return bookings.Where(b => b.StartDate >= start && b.EndDate <= end).OrderBy(b => b.StartDate).ToList();
     }
 }
-
-
-public class ScheduleResponse
-{
-
-}

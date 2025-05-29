@@ -1,45 +1,68 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fetchSchedule } from '../../api/schedule';
+	import { fetchSchedule, fetchScheduleQuery } from '../../api/schedule';
+	import ScheduleTable from '../../components/scheduleTable.svelte';
+	import { goto } from '$app/navigation';
 
-	let scheduleData: any = null;
-	type WeekRange = { startDate: Date; endDate: Date };
+	// $: queryParams = $page.url ? new URLSearchParams($page.url.search) : new URLSearchParams();
+	// if (!queryParams.get('week') || !queryParams.get('year')) {
+	// 	setWeekNumber(new Date());
+	// }
+	import type { PageData } from './$types'; // Automatically generated from `+page.ts`
 
-	let { startDate, endDate }: WeekRange = getCurrentWeek(new Date());
+	export let data: PageData; // Access `week` and `year` from `load()`
+
+	let week = data.week;
+	let year = data.year;
 
 	let loading = false;
 	let error: string | null = null;
 
-	function getCurrentWeek(start: Date): { startDate: Date; endDate: Date } {
-		const dayOfWeek = start.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+	let scheduleData: any = [];
 
-		const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Move to Monday
-		const startDate = new Date(start);
-		startDate.setDate(start.getDate() - daysToSubtract);
-		startDate.setHours(0, 0, 0, 0); // Reset time
+	if (week == -1 || year == -1) {
+		error = 'Error while parsing week/year.';
+	}
 
-		const endDate = new Date(startDate);
-		endDate.setDate(startDate.getDate() + 6); // Get Sunday of the same week
-		endDate.setHours(23, 59, 59, 999); // Set to end of the day
+	function setWeekNumber(date: Date) {
+		const newYear = date.getFullYear();
+		const firstJan = new Date(year, 0, 1);
+		const daysSinceFirstJan = Math.floor(
+			(date.getTime() - firstJan.getTime()) / (1000 * 60 * 60 * 24)
+		);
+		const newWeek = Math.ceil((daysSinceFirstJan + firstJan.getDay() + 1) / 7);
+		goto(`?week=${newWeek}&year=${newYear}`);
+		updateSchedule();
+	}
 
-		return { startDate, endDate };
+	function changeWeek(offset: number) {
+		const newDate = new Date(year, 0, 1); // Start from January 1st of current year
+		newDate.setDate(newDate.getDate() + (week - 1) * 7 + offset * 7); // Adjust by weeks
+
+		// Recalculate the correct year and week number
+		year = newDate.getFullYear();
+		const firstJan = new Date(year, 0, 1);
+		const daysSinceFirstJan = Math.floor(
+			(newDate.getTime() - firstJan.getTime()) / (1000 * 60 * 60 * 24)
+		);
+		week = Math.ceil((daysSinceFirstJan + firstJan.getDay() + 1) / 7);
+
+		goto(`?week=${week}&year=${year}`);
+		updateSchedule();
 	}
 
 	async function updateSchedule() {
+		console.log(year);
+		console.log(week);
 		loading = true;
-		console.log('Startdate: ' + startDate);
-		console.log(endDate);
-		const { data, error: fetchError } = await fetchSchedule(startDate, endDate);
+		const { data, error: fetchError } = await fetchScheduleQuery(year, week);
 		scheduleData = data;
 		error = fetchError;
 		loading = false;
 	}
 
-	// $: if (startDate) {
-	// 	updateSchedule();
-	// }
-
 	onMount(async () => {
+		goto(`?week=${week}&year=${year}`);
 		updateSchedule();
 	});
 </script>
@@ -49,12 +72,23 @@
 {:else if error}
 	<p class="error">{error}</p>
 {:else}
-	<input type="date" bind:value={startDate} />
-	<!-- <button on:click={updateSchedule} disabled={loading}>Fetch Schedule</button> not needed because of $: reactive statement-->
-	<p>Data: {JSON.stringify(scheduleData)}</p>
+	<div class="week-header">
+		<button class="button" on:click={() => changeWeek(-1)}>⬅</button>
+		Week {week}
+		<button class="button" on:click={() => changeWeek(1)}>➡</button>
+	</div>
+	<ScheduleTable bookings={scheduleData} />
 {/if}
 
 <style>
+	.week-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 18px;
+		font-weight: bold;
+		padding: 5px;
+	}
 	.error {
 		color: red;
 	}
