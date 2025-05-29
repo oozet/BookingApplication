@@ -15,13 +15,41 @@ public class ScheduleController : ControllerBase
         this.scheduleService = scheduleService;
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<IActionResult> GetSchedule([FromBody] ScheduleRequest request)
     {
         try
         {
-            var bookings = await scheduleService.GetScheduleAsync(request.startDate,
-request.endDate);
+            // DateTime startDate = DateTime.Parse(request.startDate);
+            // DateTime endDate = DateTime.Parse(request.endDate);
+            var bookings = await scheduleService.GetScheduleAsync(request.startDate, request.endDate);
+            return Ok(bookings);
+        }
+        catch (DateErrorException ex)
+        {
+            // Logger not implemented
+            Console.WriteLine(ex.Message);
+            return StatusCode(500, "Unable to get bookings");
+        }
+        catch
+        {
+            return BadRequest("");
+        }
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetScheduleQuery([FromQuery] int year, [FromQuery] int week)
+    {
+        try
+        {
+            if (1 > week || week > 53) return BadRequest("Invalid week number");
+
+            var (startDate, endDate) = WeekHelper.GetWeekStartAndEnd(year, week);
+
+            // DateTime startDate = DateTime.Parse(request.startDate);
+            // DateTime endDate = DateTime.Parse(request.endDate);
+            var bookings = await scheduleService.GetScheduleAsync(startDate, endDate);
             return Ok(bookings);
         }
         catch (DateErrorException ex)
@@ -65,3 +93,4 @@ request.endDate);
     //     }
     // }
 }
+
