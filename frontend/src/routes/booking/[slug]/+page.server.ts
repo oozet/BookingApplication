@@ -5,9 +5,8 @@ import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { API_BASE_URL } from '$lib/constants';
 
-
-
 export const load: PageServerLoad = async ({ params }) => {
+
     let booking = await fetch(API_BASE_URL + "booking/" + params.slug);
 
     if (!booking.ok) {

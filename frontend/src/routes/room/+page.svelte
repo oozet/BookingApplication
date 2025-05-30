@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { userStore } from '../../api/user';
 
 	let data: any = null;
 	let loading = true;
 	let error: string | null = null;
 	let rooms: Array<any> = [];
+
+	let user: any;
+	$: userStore.subscribe((value) => (user = value));
 
 	async function fetchRooms() {
 		try {
@@ -14,6 +18,7 @@
 			});
 			if (!response.ok) throw new Error('Failed to fetch');
 			rooms = await response.json();
+			console.log(rooms);
 		} catch (err: any) {
 			error = err.message;
 		} finally {
@@ -29,16 +34,18 @@
 {:else if error}
 	<p class="error">{error}</p>
 {:else}
+	<div>{user.username},{user.id}</div>
 	<div class="room-list">
 		{#each rooms as room (room.id)}
-            <div>
-                <h2>{room.name}</h2>
-                <p>Number: {room.RoomNumber}</p>
-                <p>Area: {room.Area}</p>
-                <p>Limit: {room.Limit}</p>
-                <p>Price: {room.Price}</p>
-                <button>Book room</button>
-            </div>
+			<div>
+				<h2>{room.name}</h2>
+				<p>Id: {room.id}</p>
+				<p>Number: {room.roomNumber}</p>
+				<p>Area: {room.area}</p>
+				<p>Limit: {room.limit}</p>
+				<p>Price: {room.price}</p>
+				<button>Book room</button>
+			</div>
 		{/each}
 	</div>
 {/if}

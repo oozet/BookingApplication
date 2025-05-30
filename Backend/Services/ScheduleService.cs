@@ -15,15 +15,15 @@ public class ScheduleService
         this.bookingRepository = bookingRepository;
     }
 
-    public async Task<List<Booking>> GetScheduleAsync(DateTime start, DateTime end)
+    public async Task<List<BookingResponse>> GetScheduleAsync(DateTime start, DateTime end)
     {
         var bookings = await bookingRepository.GetAllAsync();
-        return bookings.Where(b => b.StartDate >= start && b.EndDate <= end).OrderBy(b => b.StartDate).ToList();
+        var filteredBookings = bookings.Where(b => b.StartDate >= start && b.EndDate <= end).OrderBy(b => b.StartDate).ToList();
+        var schedule = new List<BookingResponse>();
+        foreach (var booking in filteredBookings)
+        {
+            schedule.Add(BookingResponse.FromModel(booking));
+        }
+        return schedule;
     }
-}
-
-
-public class ScheduleResponse
-{
-
 }

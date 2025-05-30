@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { PageData } from './$types';
 	import BookingCard from '../../../components/bookingCard.svelte';
 
-	let { data } = $props();
+	let { data }: { data: PageData } = $props();
 
 	let booking = data.booking;
 	let user = data.user;
