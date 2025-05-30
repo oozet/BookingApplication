@@ -9,6 +9,10 @@
 
 	let authorized = $state(false);
 
+	let acitivtyDropdownVisible = $state(false);
+	let roomDropdownVisible = $state(false);
+	let userDropdownVisible = $state(false);
+
 	onMount(async () => {
 		const isAdmin = await fetch('http://localhost:5133/user/is-admin', {
 			method: 'GET',
@@ -65,7 +69,41 @@
 		<button type="submit">Login</button>
 	</form>
 {:else}
-	logged in
+	<button
+		class="activity-button"
+		onclick={() => {
+			acitivtyDropdownVisible = !acitivtyDropdownVisible;
+		}}>Acitiviy panel</button
+	>
+	<div class="act-drop">
+		{#if acitivtyDropdownVisible}Hello{/if}
+	</div>
+	<button
+		class="room-button"
+		onclick={() => {
+			roomDropdownVisible = !roomDropdownVisible;
+		}}>Room panel</button
+	>
+	<div class="room-drop">
+		{#if roomDropdownVisible}World{/if}
+	</div>
+	<button
+		class="user-button"
+		onclick={() => {
+			userDropdownVisible = !userDropdownVisible;
+		}}>User panel</button
+	>
+	<div class="user-drop">
+		{#if userDropdownVisible}!{/if}
+	</div>
 {/if}
 
-<style></style>
+<style>
+	button {
+		width: 10rem;
+		height: 2.8rem;
+		line-height: 2.5rem;
+		font-family: inherit;
+		margin: 0.5rem;
+	}
+</style>
