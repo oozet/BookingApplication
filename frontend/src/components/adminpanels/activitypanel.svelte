@@ -13,6 +13,7 @@
 	}
 </script>
 
+{message}
 <div class="activitypanel">
 	<button class="add"> Add New Activity</button>
 
