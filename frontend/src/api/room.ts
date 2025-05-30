@@ -11,4 +11,20 @@ export class RoomApi {
 
         return await response.json();
     }
+
+    static async DeleteRoom(id: string) {
+        let response = await fetch(API_BASE_URL + 'room/' + id, {
+            headers: {
+                credentials: 'include'
+            },
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            let message = 'could not delete room: ' + response.status;
+            return message;
+        }
+
+        return response.json();
+    }
 }
