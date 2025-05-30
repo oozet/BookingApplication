@@ -34,13 +34,16 @@ namespace BookingApplication.Repositories
         }
 
         // booking specific methods
-        public async Task<IEnumerable<Booking>> GetBookingsByUserAsync(Guid userId)
+        public override async Task<IEnumerable<Booking>> GetBookingsByUserAsync(Guid userId)
         {
-            return await _context.Bookings
-                .Where(b => b.UserId == userId)
-                .Include(b => b.Room)
-                .Include(b => b.Activity)
-                .ToListAsync();
+            // return await _context.Bookings
+            //     .Where(b => b.UserId == userId)
+            //     .Include(b => b.Room)
+            //     .Include(b => b.Activity)
+            //     .ToListAsync();
+              return await _context.Bookings
+        .Where(booking => booking.UserId == userId) 
+        .ToListAsync();
         }
     }
 }
