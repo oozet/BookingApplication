@@ -12,7 +12,7 @@ export class RoomApi {
         return await response.json();
     }
 
-    static async DeleteRoom(id: string) {
+    static async Delete(id: string) {
         let response = await fetch(API_BASE_URL + 'room/' + id, {
             method: 'DELETE',
             credentials: 'include',

@@ -27,4 +27,21 @@ export class ActivityApi {
       throw error;
     }
   }
+
+  static async Delete(id: string) {
+    let response = await fetch(this.API_BASE_URL + "/" + id, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      let message = 'could not delete activity: ' + response.status;
+      return message;
+    }
+
+    return response.status;
+  }
 }

@@ -8,7 +8,7 @@
 	let message: string = $state('');
 
 	async function deleteRoom(id: string) {
-		message = await RoomApi.DeleteRoom(id);
+		message = (await RoomApi.Delete(id)).toString();
 
 		invalidateAll();
 	}
