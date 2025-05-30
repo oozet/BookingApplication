@@ -139,4 +139,11 @@ public class UserController : ControllerBase
             return BadRequest();
         }
     }
+
+    [HttpGet("is-admin")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult IsAdmin()
+    {
+        return Ok();
+    }
 }
