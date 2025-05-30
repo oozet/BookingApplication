@@ -8,4 +8,5 @@ public interface IRepository<T>
     public Task EditAsync(T updatedEntity);
     public Task DeleteAsync(T entityToRemove);
     public Task SaveChangesAsync();
+     public Task<IEnumerable<T>> GetBookingsByUserAsync(Guid userId);
 }

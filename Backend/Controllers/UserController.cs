@@ -139,4 +139,31 @@ public class UserController : ControllerBase
             return BadRequest();
         }
     }
+
+[HttpGet("bookings")]
+[Authorize]
+public async Task<IActionResult> GetMyBookings()
+{
+    try
+    {
+        Console.WriteLine("Endpoint hit - checking user claims...");
+        
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Console.WriteLine($"User ID from claims: {userId}");
+        
+        if (userId == null)
+            throw new Exception("Cannot retrieve user id.");
+        
+        Console.WriteLine($"Calling service with GUID: {Guid.Parse(userId)}");
+        var bookings = await userService.GetBookingsByUserAsync(Guid.Parse(userId));
+        
+        Console.WriteLine($"Retrieved {bookings?.Count() ?? 0} bookings");
+        return Ok(bookings);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Full exception: {ex}");
+        return StatusCode(500, new { errors = "An unexpected error occurred." });
+    }
+}
 }

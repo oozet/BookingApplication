@@ -60,5 +60,14 @@ namespace BookingApplication.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        // public Task<IEnumerable<T>> GetBookingsByUserAsync(Guid userId)
+        // {
+        //     throw new NotImplementedException();
+        // }
+         public virtual Task<IEnumerable<T>> GetBookingsByUserAsync(Guid userId)
+    {
+        throw new NotImplementedException($"GetBookingsByUserAsync is not implemented for {typeof(T).Name}");
+    }
     }
 }

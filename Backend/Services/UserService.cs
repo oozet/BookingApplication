@@ -18,23 +18,27 @@ public interface IUserService : IService<User, RegisterUserRequest, EditUserRequ
     //public Task<Dictionary<string, string>> GetAllAsync();
     public Task<User?> GetByIdAsync(string id);
     public Task<User?> DeleteAsync(string entityId);
+    Task<IEnumerable<Booking>> GetBookingsByUserAsync(Guid userId);
 }
 
 public class UserService : IUserService //: EfService<User, RegisterRequest, EditUserRequest>, IUserService
 {
     private readonly UserManager<User> userManager;
     private readonly SignInManager<User> signInManager;
+    private readonly IRepository<Booking> bookingRepository;
 
     //private readonly EntityUpdaterService updaterService;
 
     public UserService(
         UserManager<User> userManager,
-        SignInManager<User> signInManager
+        SignInManager<User> signInManager,
+        IRepository<Booking> bookingRepository
     //EntityUpdaterService updaterService
     )
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
+         this.bookingRepository = bookingRepository;
         //this.updaterService = updaterService;
     }
 
@@ -116,6 +120,11 @@ public class UserService : IUserService //: EfService<User, RegisterRequest, Edi
     {
         return await userManager.Users.ToListAsync();
     }
+
+    public async Task<IEnumerable<Booking>> GetBookingsByUserAsync(Guid userId)
+    {
+        return await bookingRepository.GetBookingsByUserAsync(userId);
+            }
 
     public async Task<User?> GetByIdAsync(string id)
     {
