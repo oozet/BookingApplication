@@ -2,6 +2,10 @@
 	import { error } from '@sveltejs/kit';
 	import { userStore, login } from '../../api/user';
 	import { onMount } from 'svelte';
+	import Roompanel from '../../components/adminpanels/roompanel.svelte';
+	import Userpanel from '../../components/adminpanels/userpanel.svelte';
+	import Activitypanel from '../../components/adminpanels/activitypanel.svelte';
+	import type { PageData } from './$types';
 
 	let username = $state('');
 	let password = $state('');
@@ -12,6 +16,8 @@
 	let acitivtyDropdownVisible = $state(false);
 	let roomDropdownVisible = $state(false);
 	let userDropdownVisible = $state(false);
+
+	let { data }: { data: PageData } = $props();
 
 	onMount(async () => {
 		const isAdmin = await fetch('http://localhost:5133/user/is-admin', {
@@ -76,7 +82,9 @@
 		}}>Acitiviy panel</button
 	>
 	<div class="act-drop">
-		{#if acitivtyDropdownVisible}Hello{/if}
+		{#if acitivtyDropdownVisible}
+			<Activitypanel activities={data.activities} />
+		{/if}
 	</div>
 	<button
 		class="room-button"
@@ -85,7 +93,9 @@
 		}}>Room panel</button
 	>
 	<div class="room-drop">
-		{#if roomDropdownVisible}World{/if}
+		{#if roomDropdownVisible}
+			<Roompanel rooms={data.rooms} />
+		{/if}
 	</div>
 	<button
 		class="user-button"
@@ -94,7 +104,9 @@
 		}}>User panel</button
 	>
 	<div class="user-drop">
-		{#if userDropdownVisible}!{/if}
+		{#if userDropdownVisible}
+			<Userpanel users={[]} />
+		{/if}
 	</div>
 {/if}
 
