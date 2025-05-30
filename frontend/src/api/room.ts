@@ -14,10 +14,11 @@ export class RoomApi {
 
     static async DeleteRoom(id: string) {
         let response = await fetch(API_BASE_URL + 'room/' + id, {
+            method: 'DELETE',
+            credentials: 'include',
             headers: {
-                credentials: 'include'
-            },
-            method: 'DELETE'
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!response.ok) {
@@ -25,6 +26,6 @@ export class RoomApi {
             return message;
         }
 
-        return response.json();
+        return response.status;
     }
 }
