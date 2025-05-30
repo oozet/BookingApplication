@@ -4,6 +4,10 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<title>Booking App</title>
+</svelte:head>
+
 <Navbar />
 
 <main>{@render children()}</main>

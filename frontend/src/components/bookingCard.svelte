@@ -1,6 +1,13 @@
 <script lang="ts">
-	// We'll fetch this data in th slug page server and then send it
-	// as a prop to this component to make the component be more of a component.
+	import { userStore } from '../api/user';
+	import type { User } from '../api/user';
+
+	let loggedInUser = $state($userStore);
+
+	userStore.subscribe((value) => {
+		loggedInUser = value;
+	});
+
 	let { booking = {}, user = {}, room = {}, activity = {} } = $props();
 
 	let startDate = new Date(booking.startDate);
@@ -26,6 +33,10 @@
 	<p><strong>Start:</strong>{startDate}</p>
 	<p><strong>End:</strong>{endDate}</p>
 </div>
+
+{#if loggedInUser}
+	<div>Edit Booking</div>
+{/if}
 
 <style>
 	.booking-card {
