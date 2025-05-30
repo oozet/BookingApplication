@@ -53,8 +53,8 @@
 		left: 15%;
 		width: 70%;
 		height: 70%;
-		background-color: #ebebebff;
-		border: 2px solid #d6d6d6ff;
+		background-color: #bcc4dbff;
+		border: 2px solid rgb(178, 186, 207);
 		border-radius: 10px;
 
 		display: flex;
