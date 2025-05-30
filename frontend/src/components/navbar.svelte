@@ -25,6 +25,7 @@
 		<h3><a href="/room" onclick={changeOpenState}>Room</a></h3>
 		<h3><a href="/activities" onclick={changeOpenState}>Activities</a></h3>
 		<h3><a href="/schedule" onclick={changeOpenState}>Schedule</a></h3>
+		<h3><a href="/admin" onclick={changeOpenState}>Admin</a></h3>
 	</div>
 {/if}
 

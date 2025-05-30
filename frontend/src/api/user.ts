@@ -9,6 +9,7 @@ export const userStore = writable<User | null>(null); // Stores user session inf
 export async function login(username: string, password: string) {
     const response = await fetch('http://localhost:5133/user/login', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     });
