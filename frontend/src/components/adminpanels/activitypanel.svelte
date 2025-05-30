@@ -1,5 +1,16 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
+	import { ActivityApi } from '../../api/activity';
+
 	let { activities } = $props();
+
+	let message: string = $state('');
+
+	async function deleteActivity(id: string) {
+		message = (await ActivityApi.Delete(id)).toString();
+
+		invalidateAll();
+	}
 </script>
 
 <div class="activitypanel">
@@ -9,7 +20,12 @@
 		<div class="activity">
 			<p>Name: {activity.name}, Description: {activity.description}</p>
 			<button class="edit">Edit</button>
-			<button class="delete">Delete</button>
+			<button
+				class="delete"
+				onclick={() => {
+					deleteActivity(activity.id);
+				}}>Delete</button
+			>
 		</div>
 	{/each}
 </div>
