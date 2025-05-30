@@ -44,4 +44,22 @@ export class ActivityApi {
 
     return response.status;
   }
+
+  static async Create(name: string, description: string) {
+    let response = await fetch(this.API_BASE_URL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: name, description: description })
+    });
+
+    if (!response.ok) {
+      let message = 'could not create activity: ' + response.status;
+      return message;
+    }
+
+    return response.status.toString();
+  }
 }

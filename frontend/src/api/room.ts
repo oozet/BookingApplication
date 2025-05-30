@@ -28,4 +28,21 @@ export class RoomApi {
 
         return response.status;
     }
+
+    static async Create(name: string, number: number, limit: number, area: number, price: number) {
+        let response = await fetch(API_BASE_URL + "room", {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: name, roomNumber: number, limit: limit, area: area, price: price })
+        })
+
+        if (!response.ok) {
+            return "Could not create a new room: " + response.status;
+        }
+
+        return response.status.toString();
+    }
 }
