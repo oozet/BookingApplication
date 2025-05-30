@@ -2,6 +2,8 @@
 	import { invalidateAll } from '$app/navigation';
 	import { API_BASE_URL } from '$lib/constants';
 	import { RoomApi } from '../../api/room';
+	import AddRoomModal from '../modal/addRoomModal.svelte';
+	import { isModalVisible } from '$lib/shared.svelte';
 
 	let { rooms } = $props();
 
@@ -17,7 +19,14 @@
 <p>{message}</p>
 
 <div class="roompanel">
-	<button class="add"> Add New Room</button>
+	<button
+		class="add"
+		onclick={() => {
+			isModalVisible.addRoomModal = !isModalVisible.addRoomModal;
+		}}
+	>
+		Add New Room</button
+	>
 
 	{#each rooms as room}
 		<div class="room" style="margin-bottom: 0.5rem;">
@@ -34,6 +43,10 @@
 		</div>
 	{/each}
 </div>
+
+{#if isModalVisible.addRoomModal}
+	<AddRoomModal />
+{/if}
 
 <style>
 	.roompanel {

@@ -19,8 +19,9 @@
 	}
 </script>
 
-<p>{message}</p>
 <div class="add-room-modal">
+	<h3>Add Room</h3>
+	<p>{message}</p>
 	<form onsubmit={addRoom}>
 		<label for="">
 			Name: <input type="text" bind:value={name} />
@@ -48,7 +49,9 @@
 	.add-room-modal {
 		z-index: 100;
 		position: fixed;
-		width: 90%;
+		top: 15%;
+		left: 15%;
+		width: 70%;
 		height: 70%;
 		background-color: #ebebebff;
 		border: 2px solid #d6d6d6ff;

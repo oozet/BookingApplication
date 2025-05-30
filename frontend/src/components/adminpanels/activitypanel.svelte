@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { ActivityApi } from '../../api/activity';
+	import AddActivityModal from '../modal/addActivityModal.svelte';
+	import { isModalVisible } from '$lib/shared.svelte';
 
 	let { activities } = $props();
 
@@ -13,9 +15,16 @@
 	}
 </script>
 
-{message}
+<p>{message}</p>
 <div class="activitypanel">
-	<button class="add"> Add New Activity</button>
+	<button
+		class="add"
+		onclick={() => {
+			isModalVisible.addActivityModal = !isModalVisible.addActivityModal;
+		}}
+	>
+		Add New Activity</button
+	>
 
 	{#each activities as activity}
 		<div class="activity">
@@ -30,6 +39,10 @@
 		</div>
 	{/each}
 </div>
+
+{#if isModalVisible.addActivityModal}
+	<AddActivityModal />
+{/if}
 
 <style>
 	.activitypanel {
