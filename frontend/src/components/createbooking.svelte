@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import { onMount } from 'svelte';
 
     let data: any = null;
@@ -42,4 +42,4 @@
 
 <style>
     .error { color: red; }
-</style>
+</style> -->

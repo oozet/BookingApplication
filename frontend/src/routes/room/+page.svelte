@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { userStore } from '../../api/user';
+	import { goto } from '$app/navigation';
 
 	let data: any = null;
 	let loading = true;
@@ -26,6 +27,10 @@
 		}
 	}
 
+	function bookRoom(roomId: string) {
+		goto(`/createBooking/${roomId}`);
+	}
+
 	onMount(fetchRooms);
 </script>
 
@@ -44,7 +49,7 @@
 				<p>Area: {room.area}</p>
 				<p>Limit: {room.limit}</p>
 				<p>Price: {room.price}</p>
-				<button>Book room</button>
+				<button onclick={() => bookRoom(room.id)}>Book room</button>
 			</div>
 		{/each}
 	</div>
