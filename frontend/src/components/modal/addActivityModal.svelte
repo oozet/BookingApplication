@@ -26,7 +26,7 @@
 		<label for="">
 			Description: <input type="text" bind:value={desc} />
 		</label>
-		<button type="submit">Create Room</button>
+		<button type="submit">Create Activity</button>
 	</form>
 	<button
 		class="close"
