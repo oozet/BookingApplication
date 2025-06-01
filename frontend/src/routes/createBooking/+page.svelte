@@ -3,8 +3,10 @@
 	import { BookingApi } from '../../api/booking';
 	import { onMount } from 'svelte';
 	import { ActivityApi, type Activity } from '../../api/activity';
+	import type { PageData } from './$types';
 
-	const { userId, roomId } = $props();
+	let { data }: { data: PageData } = $props();
+	const roomId: string = data.roomId;
 
 	let activities: Activity[] = $state([]);
 

@@ -1,4 +1,4 @@
-import AddBookingModal from "../components/modal/addBookingModal.svelte";
+import AddBookingModal from "../routes/createBooking/+page.svelte";
 
 export const isModalVisible = $state(
     {
@@ -6,6 +6,5 @@ export const isModalVisible = $state(
         addRoomModal: false,
         editActivityModal: false,
         editRoomModal: false,
-        addBookingModal: false
     }
 )

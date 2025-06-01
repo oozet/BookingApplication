@@ -4,10 +4,6 @@
 	import ScheduleTable from '../../components/scheduleTable.svelte';
 	import { goto } from '$app/navigation';
 
-	// $: queryParams = $page.url ? new URLSearchParams($page.url.search) : new URLSearchParams();
-	// if (!queryParams.get('week') || !queryParams.get('year')) {
-	// 	setWeekNumber(new Date());
-	// }
 	import type { PageData } from './$types'; // Automatically generated from `+page.ts`
 	import type { Booking } from '$lib/types';
 
