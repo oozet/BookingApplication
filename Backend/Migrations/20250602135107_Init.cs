@@ -12,7 +12,7 @@ namespace BookingApplication.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Ensure btree_gist is available
+
             migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS btree_gist;");
 
             migrationBuilder.AlterDatabase()
@@ -285,19 +285,18 @@ namespace BookingApplication.Migrations
                 column: "RoomNumber",
                 unique: true);
 
-            // Add generated column for date range
             migrationBuilder.Sql(@"
-                    ALTER TABLE ""Bookings""
-                    ADD COLUMN ""BookingPeriod"" tstzrange
-                    GENERATED ALWAYS AS (tstzrange(""StartDate"", ""EndDate"")) STORED;
-                ");
+            ALTER TABLE ""Bookings""
+            ADD COLUMN ""BookingPeriod"" tstzrange
+            GENERATED ALWAYS AS (tstzrange(""StartDate"", ""EndDate"")) STORED;
+        ");
 
             // Add EXCLUDE constraint to prevent overlapping bookings per Room
             migrationBuilder.Sql(@"
-                    ALTER TABLE ""Bookings""
-                    ADD CONSTRAINT booking_no_overlap
-                    EXCLUDE USING gist (""RoomId"" WITH =, ""BookingPeriod"" WITH &&);
-                ");
+        ALTER TABLE ""Bookings""
+        ADD CONSTRAINT booking_no_overlap
+        EXCLUDE USING gist (""RoomId"" WITH =, ""BookingPeriod"" WITH &&);
+    ");
         }
 
         /// <inheritdoc />
@@ -334,14 +333,14 @@ namespace BookingApplication.Migrations
                 name: "Rooms");
 
             migrationBuilder.Sql(@"
-                ALTER TABLE ""Bookings""
-                DROP CONSTRAINT IF EXISTS booking_no_overlap;
-            ");
+        ALTER TABLE ""Bookings""
+        DROP CONSTRAINT IF EXISTS booking_no_overlap;
+    ");
 
             migrationBuilder.Sql(@"
-                ALTER TABLE ""Bookings""
-                DROP COLUMN IF EXISTS ""BookingPeriod"";
-            ");
+        ALTER TABLE ""Bookings""
+        DROP COLUMN IF EXISTS ""BookingPeriod"";
+    ");
         }
     }
 }
