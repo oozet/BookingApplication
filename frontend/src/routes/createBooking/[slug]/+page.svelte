@@ -35,6 +35,9 @@
 <div>
 	<h3>Create Booking</h3>
 	<p>{message}</p>
+	{#if !user}
+	<p>Must be logged in to book room.</p>
+	{:else}
 	<form onsubmit={createBooking}>
 		<label for="">
 			Start Date: <input type="datetime-local" bind:value={start} />
@@ -53,6 +56,7 @@
 		</label>
 		<button type="submit">Create Booking</button>
 	</form>
+	{/if}
 </div>
 
 <style>

@@ -39,7 +39,6 @@
 {:else if error}
 	<p class="error">{error}</p>
 {:else}
-	<div>{user.username},{user.id}</div>
 	<div class="room-list">
 		{#each rooms as room (room.id)}
 			<div>
