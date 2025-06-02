@@ -62,11 +62,12 @@
 
 	function convertToBooking(rawData: any): Booking {
 		const startTime = new Date(rawData.startDate);
+		console.log(rawData);
 
 		return {
 			day: startTime.getDay(), // Converts to 0 (Sunday) - 6 (Saturday)
 			hour: startTime.getHours(), // Extracts hour from 00:00 to 23:00
-			info: `Room: ${rawData.roomId}, User: ${rawData.userId}` // Customize as needed
+			info: `Room: ${rawData.roomNumber}, User: ${rawData.userId}` // Customize as needed
 		};
 	}
 

@@ -39,7 +39,7 @@ export class BookingApi {
         return response.status;
     }
 
-    static async Create(startDate: Date, endDate: Date, roomId: string, userId: string, activity: string | null) {
+    static async Create(startDate: string, endDate: string, roomId: string, userId: string, activity: string | null) {
         let response = await fetch(API_BASE_URL + "booking", {
             method: 'POST',
             credentials: 'include',
